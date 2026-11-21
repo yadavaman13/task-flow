@@ -17,11 +17,11 @@ import dashboardRoutes from './modules/dashboard/index.js';
 
 export const app = express();
 
-// ─── Global Middleware ────────────────────────────────
+// Global Middleware
 app.use(cors());
 app.use(express.json());
 
-// ─── Health Check ─────────────────────────────────────
+// Health Check
 app.get('/api/health', async (_req, res) => {
   try {
     await query('SELECT 1');
@@ -31,7 +31,7 @@ app.get('/api/health', async (_req, res) => {
   }
 });
 
-// ─── Routes ───────────────────────────────────────────
+// Routes
 app.use('/api/auth', authRoutes);
 app.use('/api/workspaces', workspaceRoutes);
 app.use('/api/invitations', invitationRoutes);
@@ -49,12 +49,12 @@ app.use('/api/projects', projectRoutes);
 app.use('/api/tasks', taskRoutes);
 app.use('/api/comments', commentRoutes);
 
-// ─── 404 Handler ──────────────────────────────────────
+// 404 Handler
 app.use((_req, res) => {
   res.status(404).json({ success: false, error: { code: 'NOT_FOUND', message: 'Route not found' } });
 });
 
-// ─── Global Error Handler ─────────────────────────────
+// Global Error Handler
 app.use(errorHandler);
 
 export default app;
