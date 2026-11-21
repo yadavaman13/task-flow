@@ -1,4 +1,4 @@
-import { envConfig } from "./config/env.config.js";
+import { envConfig } from "./src/config/env.config.js";
 import { app } from "./src/app.js";
 
 let port = envConfig.port;
