@@ -1,5 +1,5 @@
 import mysql from 'mysql2/promise';
-import { envConfig } from './env.config';
+import { envConfig } from './env.config.js';
 
 export const pool = mysql.createPool({
   host: envConfig.db.host,
@@ -12,7 +12,16 @@ export const pool = mysql.createPool({
   namedPlaceholders: false,
 });
 
+/** Run a query. Returns rows array. */
 export async function query(sql, params = []) {
   const [rows] = await pool.query(sql, params);
   return rows;
 }
+
+/** Run a query. Returns result metadata (insertId, affectedRows, changedRows). */
+export async function execute(sql, params = []) {
+  const [result] = await pool.execute(sql, params);
+  return result;
+}
+
+export default pool;
