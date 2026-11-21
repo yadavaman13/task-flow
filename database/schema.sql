@@ -40,7 +40,7 @@ CREATE TABLE users (
     name            VARCHAR(120) NOT NULL,
     email           VARCHAR(254) NOT NULL,
     password_hash   VARCHAR(255) NOT NULL,
-    avatar_url      VARCHAR(2048) NULL,
+    avatar_url      VARCHAR(2048) NULL DEFAULT 'https://ik.imagekit.io/cuq3fe9wm/task-flow/Avatar.png',
     is_active       BOOLEAN NOT NULL DEFAULT TRUE,
     is_verified     BOOLEAN NOT NULL DEFAULT FALSE,
     email_verified_at DATETIME NULL,
