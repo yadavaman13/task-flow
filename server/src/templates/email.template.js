@@ -26,7 +26,7 @@ const emailStyles = `
 `;
 
 export const otpEmailTemplate = (otp) => {
-    return `
+  return `
     <!DOCTYPE html>
     <html lang="en">
     <head>
@@ -59,7 +59,7 @@ export const otpEmailTemplate = (otp) => {
 };
 
 export const forgotPasswordOtpEmailTemplate = (otp) => {
-    return `
+  return `
     <!DOCTYPE html>
     <html lang="en">
     <head>
@@ -91,7 +91,7 @@ export const forgotPasswordOtpEmailTemplate = (otp) => {
 };
 
 export const recoverAccountOtpEmailTemplate = (otp) => {
-    return `
+  return `
     <!DOCTYPE html>
     <html lang="en">
     <head>
@@ -124,7 +124,7 @@ export const recoverAccountOtpEmailTemplate = (otp) => {
 };
 
 export const accountRecoveredEmailTemplate = () => {
-    return `
+  return `
     <!DOCTYPE html>
     <html lang="en">
     <head>

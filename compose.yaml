@@ -11,17 +11,14 @@ services:
       MYSQL_PASSWORD: ${DB_PASSWORD}
 
     ports:
-      - "127.0.0.1:3306:3306"
+      - '127.0.0.1:3306:3306'
 
     volumes:
       - taskflow-sql-data:/var/lib/mysql
 
     healthcheck:
       test:
-        [
-          "CMD-SHELL",
-          "mysqladmin ping -h 127.0.0.1 -uroot -p\"$${MYSQL_ROOT_PASSWORD}\" --silent"
-        ]
+        ['CMD-SHELL', 'mysqladmin ping -h 127.0.0.1 -uroot -p"$${MYSQL_ROOT_PASSWORD}" --silent']
       interval: 5s
       timeout: 5s
       retries: 10
