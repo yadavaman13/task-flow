@@ -21,10 +21,10 @@ export const envConfig = {
   },
 
   jwt: {
-    secret: process.env.JWT_SECRET || 'default-secret-key-change-in-prod',
+    secret: process.env.JWT_SECRET ,
     expiresIn: process.env.JWT_EXPIRY || '12h',
   },
-  jwtSecret: process.env.JWT_SECRET || 'default-secret-key-change-in-prod',
+  jwtSecret: process.env.JWT_SECRET ,
   jwtExpiresIn: process.env.JWT_EXPIRY || '12h',
 
   bcrypt: {

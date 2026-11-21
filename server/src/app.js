@@ -4,16 +4,16 @@ import { errorHandler } from './core/middleware/errorHandler.js';
 import { query } from './config/db.js';
 
 // Module routes
-import authRoutes from './modules/auth/auth.routes.js';
-import workspaceRoutes from './modules/workspace/workspace.routes.js';
-import invitationRoutes from './modules/invitation/invitation.routes.js';
-import teamRoutes from './modules/team/team.routes.js';
-import projectRoutes from './modules/project/project.routes.js';
-import taskRoutes from './modules/task/task.routes.js';
-import commentRoutes from './modules/comment/comment.routes.js';
-import notificationRoutes from './modules/notification/notification.routes.js';
-import activityRoutes from './modules/activity/activity.routes.js';
-import dashboardRoutes from './modules/dashboard/dashboard.routes.js';
+import authRoutes from './modules/auth/index.js';
+import workspaceRoutes from './modules/workspace/index.js';
+import invitationRoutes from './modules/invitation/index.js';
+import teamRoutes from './modules/team/index.js';
+import projectRoutes from './modules/project/index.js';
+import taskRoutes from './modules/task/index.js';
+import commentRoutes from './modules/comment/index.js';
+import notificationRoutes from './modules/notification/index.js';
+import activityRoutes from './modules/activity/index.js';
+import dashboardRoutes from './modules/dashboard/index.js';
 
 export const app = express();
 
@@ -43,7 +43,7 @@ app.use('/api/notifications', notificationRoutes);
 app.use('/api/activity', activityRoutes);
 app.use('/api/dashboard', dashboardRoutes);
 
-// Additional resource routes (direct access by ID)
+// Additional top-level resource routes (direct access by ID)
 app.use('/api/teams', teamRoutes);
 app.use('/api/projects', projectRoutes);
 app.use('/api/tasks', taskRoutes);

@@ -1,2 +1,18 @@
-import router from '../auth.routes.js';
+import { Router } from 'express';
+import { authenticate } from '../../../core/middleware/authenticate.js';
+import * as authController from '../controllers/auth.controller.js';
+
+const router = Router();
+
+// Public routes
+router.post('/register', authController.register);
+router.post('/login', authController.login);
+router.post('/send-verification-otp', authController.sendVerificationOtp);
+
+// Authenticated routes
+router.use(authenticate);
+router.get('/me', authController.getProfile);
+router.patch('/me', authController.updateProfile);
+router.patch('/me/password', authController.changePassword);
+
 export default router;
