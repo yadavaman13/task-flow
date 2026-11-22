@@ -1,0 +1,11 @@
+@use '@/styles/variables' as *;
+@use '@/styles/mixins' as *;
+
+.form-field {
+  &__textarea {
+    @include input-base;
+    resize: vertical;
+    min-height: 80px;
+    line-height: $line-height-base;
+  }
+}

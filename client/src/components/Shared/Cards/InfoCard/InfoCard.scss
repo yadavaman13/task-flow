@@ -1,0 +1,80 @@
+@use '@/styles/variables' as *;
+@use '@/styles/mixins' as *;
+
+.info-card {
+  @include card;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: $spacing-3;
+  transition: border-color $transition-fast, box-shadow $transition-fast;
+
+  &--clickable {
+    cursor: pointer;
+
+    &:hover {
+      border-color: $color-grey-400;
+      box-shadow: $shadow-sm;
+    }
+  }
+
+  &__header {
+    @include flex-between;
+  }
+
+  &__title {
+    font-size: $font-size-xs;
+    font-weight: $font-weight-medium;
+    color: $color-grey-500;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+  }
+
+  &__icon-wrap {
+    @include flex-center;
+    width: 32px;
+    height: 32px;
+    border-radius: $border-radius-md;
+    background-color: $color-grey-100;
+    color: $color-grey-700;
+  }
+
+  &__body {
+    display: flex;
+    flex-direction: column;
+    gap: $spacing-2;
+  }
+
+  &__value {
+    font-size: $font-size-2xl;
+    font-weight: $font-weight-bold;
+    color: $color-black;
+    line-height: 1.1;
+  }
+
+  &__footer {
+    display: flex;
+    align-items: center;
+    gap: $spacing-2;
+    font-size: $font-size-xs;
+  }
+
+  &__trend {
+    display: inline-flex;
+    align-items: center;
+    gap: $spacing-1;
+    font-weight: $font-weight-semibold;
+
+    &--positive {
+      color: $color-success;
+    }
+
+    &--negative {
+      color: $color-error;
+    }
+  }
+
+  &__description {
+    color: $color-grey-500;
+  }
+}

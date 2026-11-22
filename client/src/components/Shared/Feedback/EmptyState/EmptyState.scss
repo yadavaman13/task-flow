@@ -1,0 +1,41 @@
+@use '@/styles/variables' as *;
+@use '@/styles/mixins' as *;
+
+.empty-state {
+  @include flex-column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: $spacing-12 $spacing-6;
+  background-color: $color-white;
+  border: 1px dashed $border-color;
+  border-radius: $border-radius-lg;
+
+  &__icon-wrapper {
+    @include flex-center;
+    width: 48px;
+    height: 48px;
+    border-radius: $border-radius-full;
+    background-color: $color-grey-100;
+    color: $color-grey-600;
+    margin-bottom: $spacing-4;
+  }
+
+  &__title {
+    font-size: $font-size-base;
+    font-weight: $font-weight-medium;
+    color: $color-grey-900;
+    margin-bottom: $spacing-1;
+  }
+
+  &__description {
+    font-size: $font-size-sm;
+    color: $color-grey-500;
+    max-width: 380px;
+    margin-bottom: $spacing-5;
+  }
+
+  &__action {
+    margin-top: $spacing-2;
+  }
+}

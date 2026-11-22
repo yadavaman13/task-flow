@@ -1,0 +1,106 @@
+@use '@/styles/variables' as *;
+@use '@/styles/mixins' as *;
+
+.data-table-container {
+  width: 100%;
+  background-color: $color-white;
+  border: 1px solid $border-color;
+  border-radius: $border-radius-lg;
+  overflow: hidden;
+}
+
+.data-table-toolbar {
+  padding: $spacing-4;
+  border-bottom: 1px solid $border-color;
+  background-color: $color-white;
+}
+
+.data-table-search {
+  position: relative;
+  max-width: 320px;
+  display: flex;
+  align-items: center;
+
+  &__icon {
+    position: absolute;
+    left: $spacing-3;
+    color: $color-grey-400;
+    pointer-events: none;
+  }
+
+  &__input {
+    @include input-base;
+    padding-left: $spacing-8;
+  }
+}
+
+.data-table-wrapper {
+  overflow-x: auto;
+  width: 100%;
+}
+
+.data-table {
+  width: 100%;
+  text-align: left;
+  font-size: $font-size-sm;
+
+  &__th {
+    padding: $spacing-3 $spacing-4;
+    background-color: $color-grey-50;
+    color: $color-grey-600;
+    font-weight: $font-weight-medium;
+    font-size: $font-size-xs;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    border-bottom: 1px solid $border-color;
+    user-select: none;
+
+    &--sortable {
+      cursor: pointer;
+
+      &:hover {
+        color: $color-black;
+      }
+    }
+  }
+
+  &__th-content {
+    display: inline-flex;
+    align-items: center;
+    gap: $spacing-2;
+  }
+
+  &__sort-icon {
+    display: inline-flex;
+    color: $color-grey-400;
+  }
+
+  &__row {
+    border-bottom: 1px solid $border-color;
+    transition: background-color $transition-fast;
+
+    &:last-child {
+      border-bottom: none;
+    }
+
+    &--clickable {
+      cursor: pointer;
+
+      &:hover {
+        background-color: $color-grey-50;
+      }
+    }
+  }
+
+  &__td {
+    padding: $spacing-3 $spacing-4;
+    color: $color-grey-800;
+    vertical-align: middle;
+  }
+
+  &__loading-cell,
+  &__empty-cell {
+    padding: $spacing-8;
+    text-align: center;
+  }
+}
