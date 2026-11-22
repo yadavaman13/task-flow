@@ -1,0 +1,119 @@
+@use '@/styles/variables' as *;
+@use '@/styles/mixins' as *;
+
+.settings-page {
+  @include flex-column;
+  gap: $spacing-6;
+
+  &__header {
+    @include flex-column;
+    gap: $spacing-1;
+  }
+
+  &__title {
+    font-size: $font-size-2xl;
+    font-weight: $font-weight-bold;
+    color: $color-black;
+  }
+
+  &__subtitle {
+    font-size: $font-size-sm;
+    color: $color-grey-500;
+  }
+
+  &__grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: $spacing-6;
+
+    @include tablet {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  &__info-footer {
+    display: flex;
+    align-items: center;
+    gap: $spacing-6;
+    padding-top: $spacing-4;
+    border-top: 1px solid $border-color;
+    font-size: $font-size-xs;
+    color: $color-grey-500;
+
+    strong {
+      color: $color-grey-800;
+    }
+  }
+}
+
+.settings-card {
+  @include card;
+  @include flex-column;
+  gap: $spacing-5;
+
+  &__header {
+    display: flex;
+    align-items: center;
+    gap: $spacing-2;
+    padding-bottom: $spacing-3;
+    border-bottom: 1px solid $border-color;
+
+    h3 {
+      font-size: $font-size-base;
+      font-weight: $font-weight-semibold;
+      color: $color-black;
+    }
+  }
+
+  &__avatar-preview {
+    display: flex;
+    align-items: center;
+    gap: $spacing-4;
+  }
+
+  &__avatar {
+    @include flex-center;
+    width: 48px;
+    height: 48px;
+    border-radius: $border-radius-full;
+    background-color: $color-black;
+    color: $color-white;
+    font-size: $font-size-base;
+    font-weight: $font-weight-bold;
+  }
+
+  &__avatar-info {
+    @include flex-column;
+    gap: $spacing-1;
+  }
+
+  &__user-email {
+    font-size: $font-size-sm;
+    font-weight: $font-weight-medium;
+    color: $color-grey-900;
+  }
+
+  &__verified-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    font-size: $font-size-xs;
+    color: $color-success;
+  }
+
+  &__form {
+    @include flex-column;
+    gap: $spacing-4;
+  }
+
+  &__actions {
+    display: flex;
+    justify-content: flex-end;
+    margin-top: $spacing-2;
+  }
+
+  &__error {
+    font-size: $font-size-xs;
+    color: $color-error;
+  }
+}
