@@ -1,0 +1,87 @@
+@use 'variables' as *;
+
+// Responsive breakpoints
+@mixin mobile {
+  @media (max-width: 640px) { @content; }
+}
+
+@mixin tablet {
+  @media (max-width: 1024px) { @content; }
+}
+
+@mixin desktop {
+  @media (min-width: 1025px) { @content; }
+}
+
+// Flexbox shortcuts
+@mixin flex-center {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+@mixin flex-between {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+@mixin flex-column {
+  display: flex;
+  flex-direction: column;
+}
+
+// Card style
+@mixin card {
+  background-color: $color-white;
+  border: 1px solid $border-color;
+  border-radius: $border-radius-md;
+  padding: $spacing-5;
+}
+
+// Truncate text
+@mixin text-truncate {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+// Focus ring
+@mixin focus-ring {
+  &:focus-visible {
+    outline: 2px solid $color-black;
+    outline-offset: 2px;
+  }
+}
+
+// Input base style
+@mixin input-base {
+  width: 100%;
+  padding: $spacing-2 $spacing-3;
+  font-size: $font-size-sm;
+  font-family: $font-family-base;
+  color: $color-grey-900;
+  background-color: $color-white;
+  border: 1px solid $border-color;
+  border-radius: $border-radius-md;
+  transition: border-color $transition-fast;
+  @include focus-ring;
+
+  &:hover {
+    border-color: $color-grey-400;
+  }
+
+  &:focus {
+    border-color: $color-black;
+    outline: none;
+  }
+
+  &::placeholder {
+    color: $color-grey-400;
+  }
+
+  &:disabled {
+    background-color: $color-grey-100;
+    cursor: not-allowed;
+  }
+}
