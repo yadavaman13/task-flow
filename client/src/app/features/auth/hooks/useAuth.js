@@ -6,6 +6,7 @@ import {
   registerUser,
   logoutUser,
   updateProfile,
+  uploadAvatar,
   changePassword,
   sendVerificationOtp,
   verifyOtp,
@@ -86,6 +87,23 @@ export function useAuth() {
     }
   };
 
+  const handleUploadAvatar = async (file) => {
+    setIsSubmitting(true);
+    try {
+      const res = await uploadAvatar(file);
+      const updatedUser = res.data || res.user || res;
+      setUser(updatedUser);
+      toast.success(res.message || 'Avatar uploaded successfully');
+      return { success: true, data: updatedUser };
+    } catch (err) {
+      const msg = err.response?.data?.message || 'Failed to upload avatar';
+      toast.error(msg);
+      return { success: false, error: msg };
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
   const handleChangePassword = async (data) => {
     setIsSubmitting(true);
     try {
@@ -143,6 +161,7 @@ export function useAuth() {
     handleRegister,
     handleLogout,
     handleUpdateProfile,
+    handleUploadAvatar,
     handleChangePassword,
     handleSendOtp,
     handleVerifyOtp,

@@ -20,6 +20,17 @@ export const updateProfile = async ({ name, avatar_url }) => {
   return response.data;
 };
 
+export const uploadAvatar = async (file) => {
+  const formData = new FormData();
+  formData.append('avatar', file);
+  const response = await api.post('/auth/me/avatar', formData, {
+    headers: {
+      'Content-Type': 'multipart/form-data',
+    },
+  });
+  return response.data;
+};
+
 export const changePassword = async ({ currentPassword, newPassword }) => {
   const response = await api.patch('/auth/me/password', { currentPassword, newPassword });
   return response.data;
