@@ -1,0 +1,225 @@
+@use '@/styles/variables' as *;
+@use '@/styles/mixins' as *;
+
+.sidebar-backdrop {
+  display: none;
+
+  @include tablet {
+    display: block;
+    position: fixed;
+    inset: 0;
+    background-color: rgba(0, 0, 0, 0.4);
+    z-index: $z-dropdown - 1;
+  }
+}
+
+.sidebar {
+  width: $sidebar-width;
+  height: 100vh;
+  position: fixed;
+  left: 0;
+  top: 0;
+  background-color: $color-white;
+  border-right: 1px solid $border-color;
+  display: flex;
+  flex-direction: column;
+  z-index: $z-dropdown;
+  transition: transform $transition-base;
+
+  @include tablet {
+    transform: translateX(-100%);
+
+    &--open {
+      transform: translateX(0);
+    }
+  }
+
+  &__header {
+    @include flex-between;
+    height: $topbar-height;
+    padding: 0 $spacing-5;
+    border-bottom: 1px solid $border-color;
+  }
+
+  &__brand {
+    display: flex;
+    align-items: center;
+    gap: $spacing-2;
+  }
+
+  &__logo-icon {
+    @include flex-center;
+    width: 28px;
+    height: 28px;
+    background-color: $color-black;
+    color: $color-white;
+    border-radius: $border-radius-sm;
+  }
+
+  &__brand-title {
+    font-size: $font-size-base;
+    font-weight: $font-weight-bold;
+    letter-spacing: -0.01em;
+    color: $color-black;
+  }
+
+  &__close-btn {
+    display: none;
+    color: $color-grey-500;
+    padding: $spacing-1;
+
+    @include tablet {
+      display: flex;
+    }
+  }
+
+  &__workspace {
+    padding: $spacing-4 $spacing-5;
+    border-bottom: 1px solid $border-color;
+  }
+
+  &__workspace-label {
+    font-size: $font-size-xs;
+    color: $color-grey-400;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    display: block;
+    margin-bottom: $spacing-2;
+  }
+
+  &__workspace-card {
+    display: flex;
+    align-items: center;
+    gap: $spacing-3;
+    padding: $spacing-2;
+    background-color: $color-grey-50;
+    border: 1px solid $border-color;
+    border-radius: $border-radius-md;
+  }
+
+  &__workspace-avatar {
+    @include flex-center;
+    width: 28px;
+    height: 28px;
+    background-color: $color-black;
+    color: $color-white;
+    font-size: $font-size-xs;
+    font-weight: $font-weight-bold;
+    border-radius: $border-radius-sm;
+    flex-shrink: 0;
+  }
+
+  &__workspace-name {
+    font-size: $font-size-sm;
+    font-weight: $font-weight-medium;
+    color: $color-grey-900;
+    @include text-truncate;
+  }
+
+  &__nav {
+    flex: 1;
+    overflow-y: auto;
+    padding: $spacing-4 $spacing-3;
+  }
+
+  &__nav-heading {
+    display: block;
+    font-size: $font-size-xs;
+    color: $color-grey-400;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    padding: 0 $spacing-3;
+    margin-bottom: $spacing-2;
+  }
+
+  &__nav-list {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+  }
+
+  &__nav-link {
+    display: flex;
+    align-items: center;
+    gap: $spacing-3;
+    padding: $spacing-2 $spacing-3;
+    border-radius: $border-radius-md;
+    font-size: $font-size-sm;
+    color: $color-grey-600;
+    font-weight: $font-weight-medium;
+    transition: all $transition-fast;
+
+    &:hover {
+      background-color: $color-grey-100;
+      color: $color-black;
+    }
+
+    &--active {
+      background-color: $color-grey-100;
+      color: $color-black;
+      font-weight: $font-weight-semibold;
+    }
+  }
+
+  &__nav-icon {
+    flex-shrink: 0;
+  }
+
+  &__footer {
+    padding: $spacing-3 $spacing-4;
+    border-top: 1px solid $border-color;
+    @include flex-between;
+    gap: $spacing-2;
+  }
+
+  &__user {
+    display: flex;
+    align-items: center;
+    gap: $spacing-3;
+    overflow: hidden;
+  }
+
+  &__user-avatar {
+    @include flex-center;
+    width: 32px;
+    height: 32px;
+    background-color: $color-grey-200;
+    color: $color-grey-800;
+    font-size: $font-size-xs;
+    font-weight: $font-weight-bold;
+    border-radius: $border-radius-full;
+    flex-shrink: 0;
+  }
+
+  &__user-info {
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+  }
+
+  &__user-name {
+    font-size: $font-size-sm;
+    font-weight: $font-weight-medium;
+    color: $color-grey-900;
+    @include text-truncate;
+  }
+
+  &__user-email {
+    font-size: $font-size-xs;
+    color: $color-grey-500;
+    @include text-truncate;
+  }
+
+  &__logout-btn {
+    padding: $spacing-2;
+    color: $color-grey-500;
+    border-radius: $border-radius-md;
+    transition: all $transition-fast;
+    flex-shrink: 0;
+
+    &:hover {
+      color: $color-error;
+      background-color: $color-grey-100;
+    }
+  }
+}
