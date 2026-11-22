@@ -1,0 +1,51 @@
+@use '@/styles/variables' as *;
+@use '@/styles/mixins' as *;
+
+.register-page {
+  @include flex-column;
+  gap: $spacing-6;
+
+  &__header {
+    text-align: center;
+    @include flex-column;
+    gap: $spacing-1;
+  }
+
+  &__title {
+    font-size: $font-size-xl;
+    font-weight: $font-weight-semibold;
+    color: $color-black;
+  }
+
+  &__subtitle {
+    font-size: $font-size-sm;
+    color: $color-grey-500;
+  }
+
+  &__form {
+    @include flex-column;
+    gap: $spacing-4;
+  }
+
+  &__submit {
+    width: 100%;
+    margin-top: $spacing-2;
+  }
+
+  &__footer {
+    text-align: center;
+    font-size: $font-size-sm;
+    color: $color-grey-600;
+  }
+
+  &__link {
+    color: $color-black;
+    font-weight: $font-weight-medium;
+    text-decoration: underline;
+    text-underline-offset: 3px;
+
+    &:hover {
+      color: $color-grey-700;
+    }
+  }
+}

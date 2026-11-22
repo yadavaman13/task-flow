@@ -1,0 +1,33 @@
+@use '@/styles/variables' as *;
+@use '@/styles/mixins' as *;
+
+.otp-verification {
+  @include flex-column;
+  gap: $spacing-4;
+
+  &__intro {
+    font-size: $font-size-sm;
+    color: $color-grey-600;
+    line-height: $line-height-base;
+
+    strong {
+      color: $color-black;
+    }
+  }
+
+  &__timer {
+    font-size: $font-size-xs;
+    color: $color-grey-500;
+    text-align: center;
+  }
+
+  &__expired {
+    color: $color-error;
+    font-weight: $font-weight-medium;
+  }
+
+  &__actions {
+    @include flex-between;
+    margin-top: $spacing-2;
+  }
+}
