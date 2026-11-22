@@ -5,11 +5,11 @@ const imagekit = new ImageKit({
   privateKey: envConfig.IMAGEKIT_PRIVATE_KEY,
 });
 
-export async function uploadImageOnImageKit({ image }) {
+export async function uploadImageOnImageKit({ image, folder = 'task-flow/images' }) {
   const file = await imagekit.files.upload({
-    file: await toFile(Buffer.from(image.buffer), 'file'),
-    fileName: image.originalname,
-    folder: 'task-flow/images',
+    file: await toFile(Buffer.from(image.buffer), image.originalname || 'file'),
+    fileName: image.originalname || `avatar-${Date.now()}`,
+    folder,
   });
   return file;
 }
@@ -17,9 +17,9 @@ export async function uploadImageOnImageKit({ image }) {
 export async function uploadMultipleImagesOnImageKit(files) {
   const uploadPromises = files.map(async (file) =>
     imagekit.files.upload({
-      file: await toFile(Buffer.from(file.buffer), 'file'),
+      file: await toFile(Buffer.from(file.buffer), file.originalname || 'file'),
       fileName: file.originalname,
-      folder: file.mimetype.startsWith('image/')
+      folder: file.mimetype?.startsWith('image/')
         ? 'task-flow/images'
         : file.mimetype === 'application/pdf'
           ? 'task-flow/pdfs'
@@ -48,3 +48,4 @@ export async function uploadMultipleImagesOnImageKit(files) {
 
   return resultsWithMime;
 }
+

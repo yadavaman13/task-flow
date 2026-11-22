@@ -1,6 +1,7 @@
 import { Router } from 'express';
 import { authenticate } from '../../../core/middleware/authenticate.js';
 import * as authController from '../controllers/auth.controller.js';
+import { uploadAvatarMiddleware } from '../middleware/upload.middleware.js';
 
 const router = Router();
 
@@ -18,5 +19,6 @@ router.use(authenticate);
 router.get('/me', authController.getProfile);
 router.patch('/me', authController.updateProfile);
 router.patch('/me/password', authController.changePassword);
+router.post('/me/avatar', uploadAvatarMiddleware.single('avatar'), authController.uploadAvatar);
 
 export default router;

@@ -2,6 +2,7 @@ import bcrypt from 'bcrypt';
 import redis from '../../../config/cache.config.js';
 import { envConfig } from '../../../config/env.config.js';
 import { signJwt } from '../../../core/utils/token.js';
+import { uploadImageOnImageKit } from '../../../services/image.service.js';
 import {
   findUserByEmail,
   getUserByEmail,
@@ -314,7 +315,8 @@ export async function getProfile(req, res) {
 
 export async function updateProfile(req, res) {
   try {
-    const { name, avatarUrl } = req.body;
+    const { name, avatarUrl, avatar_url } = req.body;
+    const resolvedAvatar = avatarUrl !== undefined ? avatarUrl : avatar_url;
 
     const user = await findById(req.user.id);
     if (!user) {
@@ -323,7 +325,7 @@ export async function updateProfile(req, res) {
 
     await updateProfileQuery(req.user.id, {
       name: typeof name === 'string' ? name.trim() : undefined,
-      avatarUrl: typeof avatarUrl === 'string' ? avatarUrl.trim() : undefined,
+      avatarUrl: typeof resolvedAvatar === 'string' ? resolvedAvatar.trim() : undefined,
     });
 
     const updated = await findById(req.user.id);
@@ -334,6 +336,41 @@ export async function updateProfile(req, res) {
   } catch (err) {
     console.log(err);
     return res.status(500).json({ message: 'Internal Server Error' });
+  }
+}
+
+export async function uploadAvatar(req, res) {
+  try {
+    if (!req.file) {
+      return res.status(400).json({ message: 'No image file uploaded.' });
+    }
+
+    const user = await findById(req.user.id);
+    if (!user) {
+      return res.status(404).json({ message: 'User not found.' });
+    }
+
+    const uploadResult = await uploadImageOnImageKit({
+      image: req.file,
+      folder: 'task-flow/avatars',
+    });
+
+    const avatarUrl = uploadResult.url || uploadResult.thumbnailUrl;
+
+    await updateProfileQuery(req.user.id, {
+      avatarUrl,
+    });
+
+    const updated = await findById(req.user.id);
+    return res.status(200).json({
+      message: 'Avatar uploaded successfully',
+      data: updated,
+    });
+  } catch (err) {
+    console.error('Avatar upload error:', err);
+    return res.status(500).json({
+      message: err.message || 'Failed to upload avatar',
+    });
   }
 }
 
