@@ -1,8 +1,11 @@
+import { RouterProvider } from 'react-router-dom';
+import { AuthProvider } from './features/auth/context/auth.context';
+import { router } from './App.routes';
+
 export default function App() {
   return (
-    <div style={{ padding: '2rem', textAlign: 'center' }}>
-      <h1>TaskFlow</h1>
-      <p>Modern Project Management</p>
-    </div>
+    <AuthProvider>
+      <RouterProvider router={router} />
+    </AuthProvider>
   );
 }
