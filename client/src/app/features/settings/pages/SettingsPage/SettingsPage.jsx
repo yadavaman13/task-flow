@@ -1,7 +1,10 @@
-import { useState, useEffect } from 'react';
-import { User, Shield, Key, Mail, CheckCircle, AlertTriangle } from 'lucide-react';
+import { useState, useEffect, useRef } from 'react';
+import toast from 'react-hot-toast';
+import { User, Shield, Key, Mail, CheckCircle, AlertTriangle, Camera, Upload } from 'lucide-react';
 import Input from '@/components/Shared/Form/Input/Input';
 import Button from '@/components/Shared/Buttons/Button/Button';
+import Avatar from '@/components/Shared/Feedback/Avatar/Avatar';
+import Spinner from '@/components/Shared/Feedback/Spinner/Spinner';
 import { formatInitials, formatDate } from '@/utils/formatters';
 import { useAuth } from '@/app/features/auth/hooks/useAuth';
 import './SettingsPage.scss';
@@ -10,9 +13,13 @@ export default function SettingsPage() {
   const {
     user,
     handleUpdateProfile,
+    handleUploadAvatar,
     handleChangePassword,
     isSubmitting,
   } = useAuth();
+
+  const fileInputRef = useRef(null);
+  const [isUploadingAvatar, setIsUploadingAvatar] = useState(false);
 
   const [profileForm, setProfileForm] = useState({
     name: '',
@@ -35,6 +42,37 @@ export default function SettingsPage() {
       });
     }
   }, [user]);
+
+  const onFileSelect = async (e) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    if (!file.type.startsWith('image/')) {
+      toast.error('Please select an image file (PNG, JPG, WEBP)');
+      return;
+    }
+
+    if (file.size > 5 * 1024 * 1024) {
+      toast.error('Image size must be less than 5MB');
+      return;
+    }
+
+    setIsUploadingAvatar(true);
+    try {
+      const res = await handleUploadAvatar(file);
+      if (res.success && res.data?.avatar_url) {
+        setProfileForm((prev) => ({
+          ...prev,
+          avatar_url: res.data.avatar_url,
+        }));
+      }
+    } finally {
+      setIsUploadingAvatar(false);
+      if (fileInputRef.current) {
+        fileInputRef.current.value = '';
+      }
+    }
+  };
 
   const onSaveProfile = async (e) => {
     e.preventDefault();
@@ -96,9 +134,26 @@ export default function SettingsPage() {
           </div>
 
           <div className="settings-card__avatar-preview">
-            <div className="settings-card__avatar">
-              {formatInitials(profileForm.name || user?.email || 'User')}
+            <div className="settings-card__avatar-wrapper">
+              <Avatar
+                src={profileForm.avatar_url || user?.avatar_url}
+                name={profileForm.name || user?.name}
+                email={user?.email}
+                size="2xl"
+                className="settings-card__avatar"
+              />
+              <button
+                type="button"
+                className="settings-card__avatar-upload-badge"
+                onClick={() => fileInputRef.current?.click()}
+                disabled={isUploadingAvatar}
+                title="Upload new avatar"
+                aria-label="Upload new avatar"
+              >
+                {isUploadingAvatar ? <Spinner size="sm" /> : <Camera size={14} />}
+              </button>
             </div>
+
             <div className="settings-card__avatar-info">
               <span className="settings-card__user-email">{user?.email}</span>
               <span className="settings-card__verified-badge">
@@ -112,7 +167,29 @@ export default function SettingsPage() {
                   </>
                 )}
               </span>
+
+              <div className="settings-card__upload-actions">
+                <Button
+                  type="button"
+                  variant="outline"
+                  size="sm"
+                  onClick={() => fileInputRef.current?.click()}
+                  loading={isUploadingAvatar}
+                  disabled={isUploadingAvatar}
+                >
+                  <Upload size={14} /> Upload Avatar
+                </Button>
+                <span className="settings-card__upload-hint">JPG, PNG, or WEBP (max 5MB)</span>
+              </div>
             </div>
+
+            <input
+              type="file"
+              ref={fileInputRef}
+              onChange={onFileSelect}
+              accept="image/png, image/jpeg, image/jpg, image/webp"
+              style={{ display: 'none' }}
+            />
           </div>
 
           <form onSubmit={onSaveProfile} className="settings-card__form">

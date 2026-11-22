@@ -69,22 +69,64 @@
     display: flex;
     align-items: center;
     gap: $spacing-4;
+    padding-bottom: $spacing-2;
+  }
+
+  &__avatar-wrapper {
+    position: relative;
+    width: 80px;
+    height: 80px;
+    flex-shrink: 0;
   }
 
   &__avatar {
-    @include flex-center;
-    width: 48px;
-    height: 48px;
+    width: 80px;
+    height: 80px;
+  }
+
+  &__avatar-upload-badge {
+    position: absolute;
+    bottom: -2px;
+    right: -2px;
+    width: 28px;
+    height: 28px;
     border-radius: $border-radius-full;
     background-color: $color-black;
     color: $color-white;
-    font-size: $font-size-base;
-    font-weight: $font-weight-bold;
+    border: 2px solid $color-white;
+    @include flex-center;
+    cursor: pointer;
+    box-shadow: $shadow-sm;
+    transition: transform $transition-fast, background-color $transition-fast;
+
+    &:hover:not(:disabled) {
+      background-color: $color-grey-800;
+      transform: scale(1.08);
+    }
+
+    &:disabled {
+      cursor: not-allowed;
+      opacity: 0.7;
+    }
   }
 
   &__avatar-info {
     @include flex-column;
     gap: $spacing-1;
+    flex: 1;
+  }
+
+  &__upload-actions {
+    display: flex;
+    align-items: center;
+    gap: $spacing-3;
+    margin-top: $spacing-2;
+    flex-wrap: wrap;
+  }
+
+  &__upload-hint {
+    font-size: $font-size-xs;
+    color: $color-grey-400;
   }
 
   &__user-email {
