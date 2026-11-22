@@ -1,0 +1,33 @@
+@use '@/styles/variables' as *;
+@use '@/styles/mixins' as *;
+
+.invitations-page {
+  @include flex-column;
+  gap: $spacing-6;
+
+  &__header {
+    @include flex-column;
+    gap: $spacing-1;
+  }
+
+  &__title {
+    font-size: $font-size-2xl;
+    font-weight: $font-weight-bold;
+    color: $color-black;
+  }
+
+  &__subtitle {
+    font-size: $font-size-sm;
+    color: $color-grey-500;
+  }
+
+  &__loading {
+    @include flex-center;
+    padding: $spacing-16;
+  }
+
+  &__list {
+    @include flex-column;
+    gap: $spacing-3;
+  }
+}

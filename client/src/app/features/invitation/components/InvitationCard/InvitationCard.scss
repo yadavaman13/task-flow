@@ -1,0 +1,90 @@
+@use '@/styles/variables' as *;
+@use '@/styles/mixins' as *;
+
+.invitation-card {
+  @include card;
+  display: flex;
+  align-items: center;
+  gap: $spacing-4;
+  transition: border-color $transition-fast;
+
+  &:hover {
+    border-color: $color-grey-400;
+  }
+
+  &__icon {
+    @include flex-center;
+    width: 44px;
+    height: 44px;
+    border-radius: $border-radius-md;
+    background-color: $color-grey-100;
+    color: $color-black;
+    flex-shrink: 0;
+  }
+
+  &__info {
+    flex: 1;
+    @include flex-column;
+    gap: 2px;
+  }
+
+  &__header-row {
+    display: flex;
+    align-items: center;
+    gap: $spacing-2;
+  }
+
+  &__workspace {
+    font-size: $font-size-base;
+    font-weight: $font-weight-semibold;
+    color: $color-black;
+  }
+
+  &__role {
+    display: inline-flex;
+    align-items: center;
+    gap: $spacing-1;
+    font-size: $font-size-xs;
+    font-weight: $font-weight-semibold;
+    padding: 1px $spacing-2;
+    border-radius: $border-radius-full;
+    background-color: $color-grey-100;
+    color: $color-grey-700;
+  }
+
+  &__meta {
+    font-size: $font-size-xs;
+    color: $color-grey-600;
+
+    strong {
+      color: $color-grey-900;
+    }
+  }
+
+  &__expiry {
+    display: inline-flex;
+    align-items: center;
+    gap: $spacing-1;
+    font-size: $font-size-xs;
+    color: $color-grey-400;
+    margin-top: 2px;
+  }
+
+  &__actions {
+    flex-shrink: 0;
+  }
+
+  @include mobile {
+    flex-direction: column;
+    align-items: flex-start;
+
+    &__actions {
+      width: 100%;
+      margin-top: $spacing-2;
+
+      button {
+        width: 100%;
+      }
+    }
+  }
+}

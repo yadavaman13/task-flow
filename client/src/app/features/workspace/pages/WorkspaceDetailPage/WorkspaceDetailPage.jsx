@@ -6,6 +6,7 @@ import Input from '@/components/Shared/Form/Input/Input';
 import Textarea from '@/components/Shared/Form/Textarea/Textarea';
 import Spinner from '@/components/Shared/Feedback/Spinner/Spinner';
 import MemberList from '../../components/MemberList/MemberList';
+import InviteModal from '@/app/features/invitation/components/InviteModal/InviteModal';
 import { useWorkspace } from '../../hooks/useWorkspace';
 import { useAuthContext } from '@/app/features/auth/context/auth.context';
 import './WorkspaceDetailPage.scss';
@@ -28,6 +29,7 @@ export default function WorkspaceDetailPage() {
 
   const [activeTab, setActiveTab] = useState('members'); // 'members' | 'settings'
   const [editForm, setEditForm] = useState({ name: '', description: '' });
+  const [isInviteModalOpen, setIsInviteModalOpen] = useState(false);
 
   const loadData = useCallback(() => {
     if (workspaceId) {
@@ -145,9 +147,9 @@ export default function WorkspaceDetailPage() {
                 variant="primary"
                 size="sm"
                 icon={UserPlus}
-                onClick={() => navigate('/invitations')}
+                onClick={() => setIsInviteModalOpen(true)}
               >
-                Manage Invitations
+                Invite Member
               </Button>
             </div>
 
@@ -157,6 +159,13 @@ export default function WorkspaceDetailPage() {
               currentUserId={user?.id}
               onUpdateRole={(userId, role) => handleUpdateMemberRole(workspaceId, userId, role)}
               onRemoveMember={(userId) => handleRemoveMember(workspaceId, userId)}
+            />
+
+            <InviteModal
+              isOpen={isInviteModalOpen}
+              onClose={() => setIsInviteModalOpen(false)}
+              workspaceId={workspaceId}
+              onSent={() => loadMembers(workspaceId)}
             />
           </div>
         )}
