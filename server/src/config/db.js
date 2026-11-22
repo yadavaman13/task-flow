@@ -1,16 +1,18 @@
 import mysql from 'mysql2/promise';
 import { envConfig } from './env.config.js';
 
-export const pool = mysql.createPool({
-  host: envConfig.db.host,
-  port: envConfig.db.port,
-  user: envConfig.db.user,
-  password: envConfig.db.password,
-  database: envConfig.db.database,
-  waitForConnections: true,
-  connectionLimit: envConfig.db.connectionLimit,
-  namedPlaceholders: false,
-});
+export const pool = envConfig.DATABASE_URL
+  ? mysql.createPool(envConfig.DATABASE_URL)
+  : mysql.createPool({
+      host: envConfig.db.host,
+      port: envConfig.db.port,
+      user: envConfig.db.user,
+      password: envConfig.db.password,
+      database: envConfig.db.database,
+      waitForConnections: true,
+      connectionLimit: envConfig.db.connectionLimit,
+      namedPlaceholders: false,
+    });
 
 /** Run a query. Returns rows array. */
 export async function query(sql, params = []) {

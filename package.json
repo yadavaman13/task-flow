@@ -1,5 +1,6 @@
 {
   "scripts": {
+    "db:reset": "npm --prefix server run db:reset",
     "test": "npm --prefix server run test",
     "test:api:docs": "npm --prefix server run test:api:docs",
     "generate:postman": "npm --prefix server run generate:postman",

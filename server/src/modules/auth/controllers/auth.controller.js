@@ -112,12 +112,30 @@ export async function login(req, res) {
     const token = signJwt(user.id);
     const safeUser = await findById(user.id);
 
+    if (envConfig.AUTH_COOKIE_OPTIONS) {
+      res.cookie('token', token, envConfig.AUTH_COOKIE_OPTIONS);
+    }
+
     return res.status(200).json({
       message: 'Logged in successfully',
       data: {
         token,
         user: safeUser,
       },
+    });
+  } catch (err) {
+    console.log(err);
+    return res.status(500).json({ message: 'Internal Server Error' });
+  }
+}
+
+export async function logout(req, res) {
+  try {
+    if (envConfig.AUTH_COOKIE_OPTIONS) {
+      res.clearCookie('token', envConfig.AUTH_COOKIE_OPTIONS);
+    }
+    return res.status(200).json({
+      message: 'Logged out successfully',
     });
   } catch (err) {
     console.log(err);

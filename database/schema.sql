@@ -34,7 +34,7 @@ DROP TABLE IF EXISTS workspace_members;
 DROP TABLE IF EXISTS workspaces;
 DROP TABLE IF EXISTS users;
 
---1. USERS
+-- 1. USERS
 CREATE TABLE users (
     id              BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
     name            VARCHAR(120) NOT NULL,

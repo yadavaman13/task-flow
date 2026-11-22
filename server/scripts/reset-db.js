@@ -7,13 +7,19 @@ const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
 async function resetDb() {
   const schemaPath = path.resolve(__dirname, '../../database/schema.sql');
-  const schema = fs.readFileSync(schemaPath, 'utf-8');
+  const rawSchema = fs.readFileSync(schemaPath, 'utf-8');
+  // Strip block comments /* ... */ and line comments -- ...
+  const cleanedSchema = rawSchema
+    .replace(/\/\*[\s\S]*?\*\//g, '')
+    .replace(/--.*$/gm, '');
+
   const conn = await pool.getConnection();
   try {
-    const stmts = schema
+    const stmts = cleanedSchema
       .split(';')
       .map((s) => s.trim())
-      .filter(Boolean);
+      .filter((s) => s.length > 0);
+
     for (const stmt of stmts) {
       await conn.query(stmt);
     }

@@ -7,6 +7,7 @@ const router = Router();
 // Public routes
 router.post('/register', authController.register);
 router.post('/login', authController.login);
+router.post('/logout', authController.logout);
 router.post('/send-verification-otp', authController.sendVerificationOtp);
 router.post('/resend-verification-otp', authController.resendVerificationOtp);
 router.post('/verify-otp', authController.verifyOtp);

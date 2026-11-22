@@ -1,5 +1,6 @@
 import express from 'express';
 import cors from 'cors';
+import { envConfig } from './config/env.config.js';
 import { errorHandler } from './core/middleware/errorHandler.js';
 import { query } from './config/db.js';
 
@@ -18,7 +19,17 @@ import dashboardRoutes from './modules/dashboard/index.js';
 export const app = express();
 
 // Global Middleware
-app.use(cors());
+app.use(
+  cors({
+    origin: (origin, callback) => {
+      if (envConfig.isAllowedClientOrigin(origin)) {
+        return callback(null, true);
+      }
+      return callback(new Error(`CORS error: Origin ${origin} not allowed`));
+    },
+    credentials: true,
+  })
+);
 app.use(express.json());
 
 // Health Check
