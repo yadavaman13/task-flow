@@ -66,10 +66,6 @@ export const envConfig = {
     maxAge: 12 * 60 * 60 * 1000, // 12 hours
   },
 
-  // JWT configuration keys
-  JWT_SECRET: process.env.JWT_SECRET,
-  JWT_EXPIRY: process.env.JWT_EXPIRY || '12h',
-
   // Redis configuration keys
   REDIS_HOST: (process.env.REDIS_HOST || '127.0.0.1').trim().replace(/:\d+$/, ''),
   REDIS_PORT: Number((process.env.REDIS_PORT || '6379').toString().trim()),
@@ -87,8 +83,6 @@ export const envConfig = {
   // Backward compatibility / convenience aliases
   port: Number(process.env.SERVER_PORT || process.env.PORT || 3000),
   nodeEnv: (process.env.NODE_ENV || 'development').toLowerCase(),
-  jwtSecret: process.env.JWT_SECRET,
-  jwtExpiresIn: process.env.JWT_EXPIRY || '12h',
   jwt: {
     secret: process.env.JWT_SECRET,
     expiresIn: process.env.JWT_EXPIRY || '12h',

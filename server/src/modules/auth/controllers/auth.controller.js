@@ -66,8 +66,8 @@ export async function register(req, res) {
         name: user.name,
         email: user.email,
         avatar_url: user.avatar_url,
-        isVerified: user.is_verified,
-        isActive: user.is_active,
+        isVerified: Boolean(user.is_verified),
+        isActive: Boolean(user.is_active),
       },
     });
   } catch (err) {
