@@ -7,6 +7,7 @@ import { ProjectProvider } from './features/project/context/project.context';
 import { TaskProvider } from './features/task/context/task.context';
 import { CommentProvider } from './features/comment/context/comment.context';
 import { NotificationProvider } from './features/notification/context/notification.context';
+import { ActivityProvider } from './features/activity/context/activity.context';
 import { router } from './App.routes';
 
 export default function App() {
@@ -19,7 +20,9 @@ export default function App() {
               <TaskProvider>
                 <CommentProvider>
                   <NotificationProvider>
-                    <RouterProvider router={router} />
+                    <ActivityProvider>
+                      <RouterProvider router={router} />
+                    </ActivityProvider>
                   </NotificationProvider>
                 </CommentProvider>
               </TaskProvider>
