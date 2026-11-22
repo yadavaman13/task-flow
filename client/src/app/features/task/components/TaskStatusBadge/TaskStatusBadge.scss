@@ -1,0 +1,79 @@
+@use '@/styles/variables' as *;
+
+.task-status-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: $spacing-1;
+  font-weight: $font-weight-medium;
+  border-radius: $border-radius-full;
+  white-space: nowrap;
+
+  &--sm {
+    font-size: $font-size-xs;
+    padding: 1px $spacing-2;
+
+    .task-status-badge__dot {
+      width: 6px;
+      height: 6px;
+    }
+  }
+
+  &--md {
+    font-size: $font-size-xs;
+    padding: 2px $spacing-3;
+
+    .task-status-badge__dot {
+      width: 7px;
+      height: 7px;
+    }
+  }
+
+  &__dot {
+    border-radius: $border-radius-full;
+  }
+
+  &--todo {
+    background-color: $color-grey-100;
+    color: $color-grey-700;
+
+    .task-status-badge__dot {
+      background-color: $color-grey-500;
+    }
+  }
+
+  &--in_progress {
+    background-color: $color-info-bg;
+    color: $color-info;
+
+    .task-status-badge__dot {
+      background-color: $color-info;
+    }
+  }
+
+  &--in_review {
+    background-color: $color-warning-bg;
+    color: $color-warning;
+
+    .task-status-badge__dot {
+      background-color: $color-warning;
+    }
+  }
+
+  &--blocked {
+    background-color: $color-error-bg;
+    color: $color-error;
+
+    .task-status-badge__dot {
+      background-color: $color-error;
+    }
+  }
+
+  &--completed {
+    background-color: $color-success-bg;
+    color: $color-success;
+
+    .task-status-badge__dot {
+      background-color: $color-success;
+    }
+  }
+}

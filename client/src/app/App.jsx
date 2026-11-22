@@ -4,6 +4,7 @@ import { WorkspaceProvider } from './features/workspace/context/workspace.contex
 import { InvitationProvider } from './features/invitation/context/invitation.context';
 import { TeamProvider } from './features/team/context/team.context';
 import { ProjectProvider } from './features/project/context/project.context';
+import { TaskProvider } from './features/task/context/task.context';
 import { router } from './App.routes';
 
 export default function App() {
@@ -13,7 +14,9 @@ export default function App() {
         <InvitationProvider>
           <TeamProvider>
             <ProjectProvider>
-              <RouterProvider router={router} />
+              <TaskProvider>
+                <RouterProvider router={router} />
+              </TaskProvider>
             </ProjectProvider>
           </TeamProvider>
         </InvitationProvider>

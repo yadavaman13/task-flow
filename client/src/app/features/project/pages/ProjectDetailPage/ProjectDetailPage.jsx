@@ -10,6 +10,9 @@ import EmptyState from '@/components/Shared/Feedback/EmptyState/EmptyState';
 import { formatInitials } from '@/utils/formatters';
 import { PROJECT_STATUSES, PROJECT_VISIBILITY } from '@/utils/constants';
 import { useProject } from '../../hooks/useProject';
+import TaskTable from '@/app/features/task/components/TaskTable/TaskTable';
+import CreateTaskModal from '@/app/features/task/components/CreateTaskModal/CreateTaskModal';
+import { useTask } from '@/app/features/task/hooks/useTask';
 import './ProjectDetailPage.scss';
 
 export default function ProjectDetailPage() {
@@ -34,13 +37,16 @@ export default function ProjectDetailPage() {
     status: PROJECT_STATUSES.ACTIVE,
     visibility: PROJECT_VISIBILITY.TEAM,
   });
+  const [isCreateTaskOpen, setIsCreateTaskOpen] = useState(false);
+  const { tasks, loadProjectTasks, handleUpdateTaskStatus } = useTask();
 
   const loadData = useCallback(() => {
     if (projectId) {
       loadProject(projectId);
       loadProjectMembers(projectId);
+      loadProjectTasks(projectId);
     }
-  }, [projectId, loadProject, loadProjectMembers]);
+  }, [projectId, loadProject, loadProjectMembers, loadProjectTasks]);
 
   useEffect(() => {
     loadData();
@@ -163,10 +169,50 @@ export default function ProjectDetailPage() {
       <div className="project-detail-content">
         {activeTab === 'tasks' && (
           <div className="project-tasks-tab">
-            <EmptyState
-              icon={CheckSquare}
-              title="Project Tasks"
-              description="Tasks assigned to this project will be listed here with status boards and filtering."
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1rem' }}>
+              <h3 style={{ fontSize: '1rem', fontWeight: 600 }}>Project Tasks</h3>
+              {status !== 'ARCHIVED' && (
+                <Button
+                  variant="primary"
+                  size="sm"
+                  icon={Plus}
+                  onClick={() => setIsCreateTaskOpen(true)}
+                >
+                  Create Task
+                </Button>
+              )}
+            </div>
+
+            {tasks.length === 0 ? (
+              <EmptyState
+                icon={CheckSquare}
+                title="No tasks in this project"
+                description="Break this project down into manageable tasks with due dates and assignments."
+                action={
+                  status !== 'ARCHIVED' && (
+                    <Button
+                      variant="primary"
+                      icon={Plus}
+                      onClick={() => setIsCreateTaskOpen(true)}
+                    >
+                      Create First Task
+                    </Button>
+                  )
+                }
+              />
+            ) : (
+              <TaskTable
+                tasks={tasks}
+                onRowClick={(task) => navigate(`/tasks/${task.id || task._id}`)}
+                onStatusChange={(taskId, newStatus) => handleUpdateTaskStatus(taskId, newStatus)}
+              />
+            )}
+
+            <CreateTaskModal
+              isOpen={isCreateTaskOpen}
+              onClose={() => setIsCreateTaskOpen(false)}
+              projectId={projectId}
+              onCreated={() => loadProjectTasks(projectId)}
             />
           </div>
         )}
