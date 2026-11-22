@@ -1,0 +1,121 @@
+@use '@/styles/variables' as *;
+@use '@/styles/mixins' as *;
+
+.project-card {
+  @include card;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: $spacing-4;
+  cursor: pointer;
+  transition: all $transition-fast;
+
+  &:hover {
+    border-color: $color-grey-400;
+    box-shadow: $shadow-sm;
+    transform: translateY(-2px);
+  }
+
+  &--archived {
+    opacity: 0.65;
+    background-color: $color-grey-50;
+  }
+
+  &__header {
+    @include flex-between;
+  }
+
+  &__icon {
+    @include flex-center;
+    width: 36px;
+    height: 36px;
+    border-radius: $border-radius-md;
+    background-color: $color-grey-100;
+    color: $color-black;
+  }
+
+  &__badges {
+    display: flex;
+    align-items: center;
+    gap: $spacing-2;
+  }
+
+  &__badge {
+    display: inline-flex;
+    align-items: center;
+    gap: $spacing-1;
+    font-size: $font-size-xs;
+    font-weight: $font-weight-semibold;
+    padding: 2px $spacing-2;
+    border-radius: $border-radius-full;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+
+    &--active {
+      background-color: $color-success-bg;
+      color: $color-success;
+    }
+
+    &--planning {
+      background-color: $color-info-bg;
+      color: $color-info;
+    }
+
+    &--completed {
+      background-color: $color-grey-200;
+      color: $color-grey-800;
+    }
+
+    &--archived {
+      background-color: $color-grey-100;
+      color: $color-grey-500;
+    }
+
+    &--private {
+      background-color: $color-grey-100;
+      color: $color-grey-700;
+    }
+  }
+
+  &__body {
+    display: flex;
+    flex-direction: column;
+    gap: $spacing-1;
+  }
+
+  &__name {
+    font-size: $font-size-base;
+    font-weight: $font-weight-semibold;
+    color: $color-black;
+  }
+
+  &__desc {
+    font-size: $font-size-sm;
+    color: $color-grey-500;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+
+  &__footer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding-top: $spacing-2;
+    border-top: 1px solid $color-grey-100;
+    font-size: $font-size-xs;
+  }
+
+  &__meta {
+    color: $color-grey-500;
+  }
+
+  &__role {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    color: $color-grey-600;
+    font-weight: $font-weight-medium;
+  }
+}

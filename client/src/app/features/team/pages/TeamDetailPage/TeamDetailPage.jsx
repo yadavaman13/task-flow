@@ -8,6 +8,9 @@ import Spinner from '@/components/Shared/Feedback/Spinner/Spinner';
 import EmptyState from '@/components/Shared/Feedback/EmptyState/EmptyState';
 import { formatInitials } from '@/utils/formatters';
 import { useTeam } from '../../hooks/useTeam';
+import ProjectCard from '@/app/features/project/components/ProjectCard/ProjectCard';
+import CreateProjectModal from '@/app/features/project/components/CreateProjectModal/CreateProjectModal';
+import { useProject } from '@/app/features/project/hooks/useProject';
 import './TeamDetailPage.scss';
 
 export default function TeamDetailPage() {
@@ -27,13 +30,16 @@ export default function TeamDetailPage() {
 
   const [activeTab, setActiveTab] = useState('projects'); // 'projects' | 'members' | 'settings'
   const [editForm, setEditForm] = useState({ name: '', description: '' });
+  const [isCreateProjectOpen, setIsCreateProjectOpen] = useState(false);
+  const { projects, loadTeamProjects } = useProject();
 
   const loadData = useCallback(() => {
     if (teamId) {
       loadTeam(teamId);
       loadTeamMembers(teamId);
+      loadTeamProjects(teamId);
     }
-  }, [teamId, loadTeam, loadTeamMembers]);
+  }, [teamId, loadTeam, loadTeamMembers, loadTeamProjects]);
 
   useEffect(() => {
     loadData();
@@ -115,12 +121,12 @@ export default function TeamDetailPage() {
         {!selectedTeam.is_archived && (
           <div className="team-detail-header__actions">
             <Button
-              variant="secondary"
+              variant="primary"
               size="sm"
               icon={Plus}
-              onClick={() => setActiveTab('projects')}
+              onClick={() => setIsCreateProjectOpen(true)}
             >
-              Projects
+              New Project
             </Button>
           </div>
         )}
@@ -155,10 +161,58 @@ export default function TeamDetailPage() {
       <div className="team-detail-content">
         {activeTab === 'projects' && (
           <div className="team-projects-tab">
-            <EmptyState
-              icon={FolderKanban}
-              title="Team Projects"
-              description="Manage this team's dedicated projects, sprints, and task roadmaps."
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1rem' }}>
+              <h3 style={{ fontSize: '1rem', fontWeight: 600 }}>Team Projects</h3>
+              {!selectedTeam.is_archived && (
+                <Button
+                  variant="primary"
+                  size="sm"
+                  icon={Plus}
+                  onClick={() => setIsCreateProjectOpen(true)}
+                >
+                  Create Project
+                </Button>
+              )}
+            </div>
+
+            {projects.length === 0 ? (
+              <EmptyState
+                icon={FolderKanban}
+                title="No projects yet"
+                description="Create projects to start tracking tasks and roadmaps with your team."
+                action={
+                  !selectedTeam.is_archived && (
+                    <Button
+                      variant="primary"
+                      icon={Plus}
+                      onClick={() => setIsCreateProjectOpen(true)}
+                    >
+                      Create First Project
+                    </Button>
+                  )
+                }
+              />
+            ) : (
+              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))', gap: '1rem' }}>
+                {projects.map((proj) => (
+                  <ProjectCard
+                    key={proj.id || proj._id}
+                    project={proj}
+                    onClick={() =>
+                      navigate(
+                        `/workspaces/${workspaceId}/teams/${teamId}/projects/${proj.id || proj._id}`
+                      )
+                    }
+                  />
+                ))}
+              </div>
+            )}
+
+            <CreateProjectModal
+              isOpen={isCreateProjectOpen}
+              onClose={() => setIsCreateProjectOpen(false)}
+              teamId={teamId}
+              onCreated={() => loadTeamProjects(teamId)}
             />
           </div>
         )}
