@@ -81,14 +81,8 @@
   }
 
   &__avatar {
-    @include flex-center;
     width: 34px;
     height: 34px;
-    border-radius: $border-radius-full;
-    background-color: $color-black;
-    color: $color-white;
-    font-size: $font-size-xs;
-    font-weight: $font-weight-semibold;
     transition: opacity $transition-fast;
 
     &:hover {

@@ -1,6 +1,6 @@
 import { Link } from 'react-router-dom';
-import { Menu, Bell, User } from 'lucide-react';
-import { formatInitials } from '@/utils/formatters';
+import { Menu, Bell } from 'lucide-react';
+import Avatar from '@/components/Shared/Feedback/Avatar/Avatar';
 import './TopBar.scss';
 
 export default function TopBar({
@@ -32,9 +32,13 @@ export default function TopBar({
         </Link>
 
         <Link to="/settings" className="topbar__profile-link" title="Account settings">
-          <div className="topbar__avatar">
-            {user.avatar_url}
-          </div>
+          <Avatar
+            src={user?.avatar_url}
+            name={user?.name}
+            email={user?.email}
+            size="sm"
+            className="topbar__avatar"
+          />
         </Link>
       </div>
     </header>

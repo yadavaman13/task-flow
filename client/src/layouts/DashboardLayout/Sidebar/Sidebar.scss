@@ -180,14 +180,8 @@
   }
 
   &__user-avatar {
-    @include flex-center;
     width: 32px;
     height: 32px;
-    background-color: $color-grey-200;
-    color: $color-grey-800;
-    font-size: $font-size-xs;
-    font-weight: $font-weight-bold;
-    border-radius: $border-radius-full;
     flex-shrink: 0;
   }
 

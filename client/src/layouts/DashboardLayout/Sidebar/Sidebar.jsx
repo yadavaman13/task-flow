@@ -10,6 +10,7 @@ import {
   CheckSquare,
 } from 'lucide-react';
 import { formatInitials } from '@/utils/formatters';
+import Avatar from '@/components/Shared/Feedback/Avatar/Avatar';
 import './Sidebar.scss';
 
 export default function Sidebar({
@@ -109,9 +110,13 @@ export default function Sidebar({
 
         <div className="sidebar__footer">
           <div className="sidebar__user">
-            <div className="sidebar__user-avatar">
-              {formatInitials(user?.name || user?.email || 'User')}
-            </div>
+            <Avatar
+              src={user?.avatar_url}
+              name={user?.name}
+              email={user?.email}
+              size="sm"
+              className="sidebar__user-avatar"
+            />
             <div className="sidebar__user-info">
               <span className="sidebar__user-name">{user?.name || 'User'}</span>
               <span className="sidebar__user-email">{user?.email || ''}</span>
