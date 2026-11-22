@@ -8,6 +8,7 @@ import { TaskProvider } from './features/task/context/task.context';
 import { CommentProvider } from './features/comment/context/comment.context';
 import { NotificationProvider } from './features/notification/context/notification.context';
 import { ActivityProvider } from './features/activity/context/activity.context';
+import { DashboardProvider } from './features/dashboard/context/dashboard.context';
 import { router } from './App.routes';
 
 export default function App() {
@@ -21,7 +22,9 @@ export default function App() {
                 <CommentProvider>
                   <NotificationProvider>
                     <ActivityProvider>
-                      <RouterProvider router={router} />
+                      <DashboardProvider>
+                        <RouterProvider router={router} />
+                      </DashboardProvider>
                     </ActivityProvider>
                   </NotificationProvider>
                 </CommentProvider>

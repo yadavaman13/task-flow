@@ -1,0 +1,78 @@
+@use '@/styles/variables' as *;
+@use '@/styles/mixins' as *;
+
+.dashboard-page {
+  @include flex-column;
+  gap: $spacing-6;
+
+  &__loading {
+    @include flex-center;
+    padding: $spacing-16;
+  }
+
+  &__nav {
+    display: flex;
+    align-items: center;
+  }
+
+  &__back-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: $spacing-2;
+    font-size: $font-size-sm;
+    color: $color-grey-500;
+    transition: color $transition-fast;
+
+    &:hover {
+      color: $color-black;
+    }
+  }
+
+  &__header {
+    @include flex-column;
+    gap: $spacing-1;
+  }
+
+  &__title {
+    font-size: $font-size-2xl;
+    font-weight: $font-weight-bold;
+    color: $color-black;
+  }
+
+  &__subtitle {
+    font-size: $font-size-sm;
+    color: $color-grey-500;
+  }
+
+  &__stats-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: $spacing-4;
+
+    @include tablet {
+      grid-template-columns: repeat(2, 1fr);
+    }
+
+    @include mobile {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  &__sections {
+    @include flex-column;
+    gap: $spacing-6;
+  }
+}
+
+.dashboard-section {
+  @include flex-column;
+  gap: $spacing-3;
+
+  &__header {
+    h3 {
+      font-size: $font-size-base;
+      font-weight: $font-weight-semibold;
+      color: $color-black;
+    }
+  }
+}

@@ -1,0 +1,72 @@
+@use '@/styles/variables' as *;
+@use '@/styles/mixins' as *;
+
+.stat-card {
+  @include card;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: $spacing-3;
+  transition: border-color $transition-fast;
+
+  &:hover {
+    border-color: $color-grey-400;
+  }
+
+  &__header {
+    @include flex-between;
+  }
+
+  &__title {
+    font-size: $font-size-xs;
+    font-weight: $font-weight-medium;
+    color: $color-grey-500;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+  }
+
+  &__icon-wrapper {
+    @include flex-center;
+    width: 32px;
+    height: 32px;
+    border-radius: $border-radius-md;
+    background-color: $color-grey-100;
+    color: $color-grey-800;
+  }
+
+  &__body {
+    display: flex;
+    flex-direction: column;
+    gap: $spacing-1;
+  }
+
+  &__value {
+    font-size: $font-size-2xl;
+    font-weight: $font-weight-bold;
+    color: $color-black;
+    line-height: 1.1;
+  }
+
+  &__footer {
+    display: flex;
+    align-items: center;
+    gap: $spacing-2;
+    font-size: $font-size-xs;
+  }
+
+  &__trend {
+    font-weight: $font-weight-semibold;
+
+    &--positive {
+      color: $color-success;
+    }
+
+    &--negative {
+      color: $color-error;
+    }
+  }
+
+  &__subtitle {
+    color: $color-grey-400;
+  }
+}
