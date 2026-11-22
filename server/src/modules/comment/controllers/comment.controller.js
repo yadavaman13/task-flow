@@ -98,7 +98,9 @@ export async function update(req, res) {
     }
 
     if (Number(existing.user_id) !== Number(req.user.id)) {
-      return res.status(403).json({ message: 'Access denied: only comment author can edit comment.' });
+      return res
+        .status(403)
+        .json({ message: 'Access denied: only comment author can edit comment.' });
     }
 
     await commentQ.update(commentId, normalizedComment);
@@ -126,7 +128,11 @@ export async function remove(req, res) {
     const isProjectOwner = access.role === 'PROJECT_OWNER';
 
     if (!isAuthor && !isProjectOwner && !access.isWsAdmin) {
-      return res.status(403).json({ message: 'Access denied: only comment author or project owner can delete comment.' });
+      return res
+        .status(403)
+        .json({
+          message: 'Access denied: only comment author or project owner can delete comment.',
+        });
     }
 
     await commentQ.remove(commentId);

@@ -2,7 +2,7 @@ import 'dotenv/config';
 
 export const envConfig = {
   port: Number(process.env.PORT || 3000),
-  nodeEnv: process.env.NODE_ENV || 'development',
+  nodeEnv: (process.env.NODE_ENV || 'development').toLowerCase(),
 
   GOOGLE_CLIENT_ID: process.env.GOOGLE_CLIENT_ID?.trim(),
   GOOGLE_CLIENT_SECRET: process.env.GOOGLE_CLIENT_SECRET?.trim(),
@@ -10,6 +10,16 @@ export const envConfig = {
   GOOGLE_SENDER_EMAIL: process.env.GOOGLE_SENDER_EMAIL?.trim(),
 
   IMAGEKIT_PRIVATE_KEY: process.env.IMAGEKIT_PRIVATE_KEY?.trim(),
+
+  REDIS_HOST: process.env.REDIS_HOST,
+  REDIS_PORT: process.env.REDIS_PORT,
+  REDIS_PASSWORD: process.env.REDIS_PASSWORD,
+
+  redis: {
+    host: (process.env.REDIS_HOST || '127.0.0.1').trim().replace(/:\d+$/, ''),
+    port: Number((process.env.REDIS_PORT || '6379').toString().trim()),
+    password: process.env.REDIS_PASSWORD ? process.env.REDIS_PASSWORD.trim() : undefined,
+  },
 
   db: {
     host: process.env.DB_HOST || '127.0.0.1',
@@ -21,10 +31,10 @@ export const envConfig = {
   },
 
   jwt: {
-    secret: process.env.JWT_SECRET ,
+    secret: process.env.JWT_SECRET,
     expiresIn: process.env.JWT_EXPIRY || '12h',
   },
-  jwtSecret: process.env.JWT_SECRET ,
+  jwtSecret: process.env.JWT_SECRET,
   jwtExpiresIn: process.env.JWT_EXPIRY || '12h',
 
   bcrypt: {

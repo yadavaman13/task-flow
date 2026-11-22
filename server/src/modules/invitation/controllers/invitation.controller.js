@@ -20,7 +20,9 @@ export async function send(req, res) {
 
     const member = await wsMemberQ.findMember(workspaceId, req.user.id);
     if (!member || !['OWNER', 'ADMIN'].includes(member.role)) {
-      return res.status(403).json({ message: 'Access denied: only owner or admin can invite members.' });
+      return res
+        .status(403)
+        .json({ message: 'Access denied: only owner or admin can invite members.' });
     }
 
     const targetUser = await userQ.findByEmail(normalizedEmail);
@@ -33,7 +35,9 @@ export async function send(req, res) {
 
     const pending = await invitationQ.findPending(workspaceId, normalizedEmail);
     if (pending) {
-      return res.status(409).json({ message: 'A pending invitation already exists for this email.' });
+      return res
+        .status(409)
+        .json({ message: 'A pending invitation already exists for this email.' });
     }
 
     const { rawToken, tokenHash } = generateInvitationToken();
@@ -145,7 +149,9 @@ export async function accept(req, res) {
 
     const user = await userQ.findById(req.user.id);
     if (!user || user.email.toLowerCase() !== inv.email.toLowerCase()) {
-      return res.status(403).json({ message: 'This invitation was sent to a different email address.' });
+      return res
+        .status(403)
+        .json({ message: 'This invitation was sent to a different email address.' });
     }
 
     const isMember = await wsMemberQ.findMember(inv.workspace_id, req.user.id);
@@ -214,7 +220,9 @@ export async function decline(req, res) {
 
     const user = await userQ.findById(req.user.id);
     if (!user || user.email.toLowerCase() !== inv.email.toLowerCase()) {
-      return res.status(403).json({ message: 'This invitation was sent to a different email address.' });
+      return res
+        .status(403)
+        .json({ message: 'This invitation was sent to a different email address.' });
     }
 
     await invitationQ.updateStatus(inv.id, 'DECLINED');
@@ -235,11 +243,15 @@ export async function cancel(req, res) {
 
     const member = await wsMemberQ.findMember(inv.workspace_id, req.user.id);
     if (!member || !['OWNER', 'ADMIN'].includes(member.role)) {
-      return res.status(403).json({ message: 'Access denied: only owner or admin can cancel invitation.' });
+      return res
+        .status(403)
+        .json({ message: 'Access denied: only owner or admin can cancel invitation.' });
     }
 
     if (inv.status !== 'PENDING') {
-      return res.status(400).json({ message: `Cannot cancel invitation with status ${inv.status}.` });
+      return res
+        .status(400)
+        .json({ message: `Cannot cancel invitation with status ${inv.status}.` });
     }
 
     await invitationQ.updateStatus(inv.id, 'CANCELLED');

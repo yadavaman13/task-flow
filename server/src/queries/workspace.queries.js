@@ -20,10 +20,11 @@ export const insert = async (connOrData, maybeData) => {
   const conn = maybeData ? connOrData : null;
   const data = maybeData ? maybeData : connOrData;
   const executor = conn || { query: execute };
-  return executor.query(
-    'INSERT INTO workspaces (name, description, owner_id) VALUES (?, ?, ?)',
-    [data.name, data.description || null, data.ownerId]
-  );
+  return executor.query('INSERT INTO workspaces (name, description, owner_id) VALUES (?, ?, ?)', [
+    data.name,
+    data.description || null,
+    data.ownerId,
+  ]);
 };
 
 export const update = async (id, { name, description }) =>

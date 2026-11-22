@@ -13,5 +13,4 @@ export function generateInvitationToken() {
   return { rawToken, tokenHash };
 }
 
-export const hashToken = (raw) =>
-  crypto.createHash('sha256').update(raw).digest('hex');
+export const hashToken = (raw) => crypto.createHash('sha256').update(raw).digest('hex');

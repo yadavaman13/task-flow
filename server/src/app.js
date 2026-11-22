@@ -51,7 +51,9 @@ app.use('/api/comments', commentRoutes);
 
 // 404 Handler
 app.use((_req, res) => {
-  res.status(404).json({ success: false, error: { code: 'NOT_FOUND', message: 'Route not found' } });
+  res
+    .status(404)
+    .json({ success: false, error: { code: 'NOT_FOUND', message: 'Route not found' } });
 });
 
 // Global Error Handler

@@ -130,7 +130,9 @@ export async function update(req, res) {
     const isTeamOwner = teamMember && teamMember.role === 'TEAM_OWNER';
 
     if (!isWsAdmin && !isTeamOwner) {
-      return res.status(403).json({ message: 'Access denied: only team owner or workspace admin can update team.' });
+      return res
+        .status(403)
+        .json({ message: 'Access denied: only team owner or workspace admin can update team.' });
     }
 
     const { name, description } = req.body;
@@ -164,7 +166,9 @@ export async function archive(req, res) {
     const isTeamOwner = teamMember && teamMember.role === 'TEAM_OWNER';
 
     if (!isWsAdmin && !isTeamOwner) {
-      return res.status(403).json({ message: 'Access denied: only team owner or workspace admin can archive team.' });
+      return res
+        .status(403)
+        .json({ message: 'Access denied: only team owner or workspace admin can archive team.' });
     }
 
     await teamQ.updateStatus(teamId, 'ARCHIVED');
@@ -219,12 +223,16 @@ export async function addMember(req, res) {
     const isTeamOwner = teamMember && teamMember.role === 'TEAM_OWNER';
 
     if (!isWsAdmin && !isTeamOwner) {
-      return res.status(403).json({ message: 'Access denied: only team owner or workspace admin can add members.' });
+      return res
+        .status(403)
+        .json({ message: 'Access denied: only team owner or workspace admin can add members.' });
     }
 
     const targetWsMember = await wsMemberQ.findMember(team.workspace_id, userId);
     if (!targetWsMember) {
-      return res.status(400).json({ message: 'User must be a member of the workspace before joining the team.' });
+      return res
+        .status(400)
+        .json({ message: 'User must be a member of the workspace before joining the team.' });
     }
 
     const existing = await teamMemberQ.findMember(teamId, userId);
@@ -283,7 +291,9 @@ export async function removeMember(req, res) {
     const isSelf = Number(req.user.id) === Number(targetId);
 
     if (!isWsAdmin && !isTeamOwner && !isSelf) {
-      return res.status(403).json({ message: 'Access denied: insufficient permissions to remove member.' });
+      return res
+        .status(403)
+        .json({ message: 'Access denied: insufficient permissions to remove member.' });
     }
 
     const target = await teamMemberQ.findMember(teamId, targetId);

@@ -101,7 +101,9 @@ export async function update(req, res) {
     const workspaceId = req.params.workspaceId || req.params.wId;
     const member = await wsMemberQ.findMember(workspaceId, req.user.id);
     if (!member || !['OWNER', 'ADMIN'].includes(member.role)) {
-      return res.status(403).json({ message: 'Access denied: only owner or admin can update workspace.' });
+      return res
+        .status(403)
+        .json({ message: 'Access denied: only owner or admin can update workspace.' });
     }
 
     const { name, description } = req.body;
@@ -147,7 +149,9 @@ export async function removeMember(req, res) {
 
     const requester = await wsMemberQ.findMember(workspaceId, req.user.id);
     if (!requester || !['OWNER', 'ADMIN'].includes(requester.role)) {
-      return res.status(403).json({ message: 'Access denied: only owner or admin can remove members.' });
+      return res
+        .status(403)
+        .json({ message: 'Access denied: only owner or admin can remove members.' });
     }
 
     const target = await wsMemberQ.findMember(workspaceId, targetId);

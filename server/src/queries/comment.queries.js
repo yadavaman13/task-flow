@@ -23,5 +23,4 @@ export const insert = async ({ taskId, userId, comment }) =>
 export const update = async (id, comment) =>
   execute('UPDATE task_comments SET comment = ? WHERE id = ?', [comment, id]);
 
-export const remove = async (id) =>
-  execute('DELETE FROM task_comments WHERE id = ?', [id]);
+export const remove = async (id) => execute('DELETE FROM task_comments WHERE id = ?', [id]);

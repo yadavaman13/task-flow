@@ -8,6 +8,9 @@ const router = Router();
 router.post('/register', authController.register);
 router.post('/login', authController.login);
 router.post('/send-verification-otp', authController.sendVerificationOtp);
+router.post('/resend-verification-otp', authController.resendVerificationOtp);
+router.post('/verify-otp', authController.verifyOtp);
+router.post('/verify-email', authController.verifyEmail);
 
 // Authenticated routes
 router.use(authenticate);

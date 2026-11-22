@@ -11,6 +11,15 @@ export const login = [
   body('password').notEmpty().withMessage('Password required'),
 ];
 
+export const sendOtp = [
+  body('email').isEmail().normalizeEmail().withMessage('Valid email required'),
+];
+
+export const verifyOtp = [
+  body('email').isEmail().normalizeEmail().withMessage('Valid email required'),
+  body('otp').trim().notEmpty().isLength({ min: 6, max: 6 }).withMessage('6-digit OTP required'),
+];
+
 export const updateProfile = [
   body('name').optional().trim().notEmpty().isLength({ max: 120 }),
   body('avatarUrl').optional({ nullable: true }).isURL().isLength({ max: 2048 }),

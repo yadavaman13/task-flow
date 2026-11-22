@@ -9,7 +9,7 @@ import {
 } from '../templates/index.js';
 
 const OTP_DEFAULT_POLICY = Object.freeze({
-  ttlSeconds: 600, //600s
+  ttlSeconds: 600, // 600s
   maxAttempts: 3,
   maxResends: 3,
   cooldownSeconds: 120,
@@ -91,8 +91,9 @@ export async function issueOtp({
   const resolvedPolicy = resolvePolicy(policy);
   const otp = generateOtp();
   const otpHash = hashOtpValue(otp);
+  const isDev = (process.env.NODE_ENV || 'development').toLowerCase() === 'development';
 
-  if (process.env.NODE_ENV === 'development') {
+  if (isDev) {
     console.log(`\n==================================================`);
     console.log(`[DEV ONLY] OTP Generated for: ${normalizedEmail}`);
     console.log(`Purpose: ${purpose}`);
@@ -111,7 +112,7 @@ export async function issueOtp({
       });
     } catch (emailError) {
       console.error(`[OTP Error] Failed to send email to ${normalizedEmail}:`, emailError.message);
-      if (process.env.NODE_ENV !== 'development') {
+      if (!isDev) {
         throw emailError;
       }
     }
@@ -204,7 +205,7 @@ export async function resendOtp({
   subject,
   buildHtml,
   text,
-  sendEmailFn = sendEmail,
+  sendEmailFn = sendEmailUsingGmailAPI,
   policy,
 }) {
   const normalizedEmail = normalizeEmail(email);
@@ -247,7 +248,8 @@ export async function resendOtp({
     session.otpHash = hashOtpValue(otp);
   }
 
-  if (process.env.NODE_ENV === 'development') {
+  const isDev = (process.env.NODE_ENV || 'development').toLowerCase() === 'development';
+  if (isDev) {
     console.log(`\n==================================================`);
     console.log(`[DEV ONLY] OTP Resent for: ${normalizedEmail}`);
     console.log(`Purpose: ${purpose}`);
@@ -269,7 +271,7 @@ export async function resendOtp({
         `[OTP Error] Failed to resend email to ${normalizedEmail}:`,
         emailError.message
       );
-      if (process.env.NODE_ENV !== 'development') {
+      if (!isDev) {
         throw emailError;
       }
     }

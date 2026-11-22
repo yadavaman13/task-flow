@@ -84,7 +84,10 @@ export const countByProject = async (projectId, { status, priority, assignedTo, 
     params.push(`%${search}%`);
   }
 
-  const [row] = await query(`SELECT COUNT(*) AS total FROM tasks WHERE ${where.join(' AND ')}`, params);
+  const [row] = await query(
+    `SELECT COUNT(*) AS total FROM tasks WHERE ${where.join(' AND ')}`,
+    params
+  );
   return row ? row.total : 0;
 };
 

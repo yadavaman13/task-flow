@@ -1,32 +1,53 @@
-/**
- * In-memory fallback cache conforming to basic Redis-like interface (get, set, del)
- * Used by OTP utilities when Redis is not configured.
- */
-class InMemoryCache {
-  constructor() {
-    this.store = new Map();
-  }
+import Redis from 'ioredis';
+import envConfig from './env.config.js';
 
-  async get(key) {
-    const entry = this.store.get(key);
-    if (!entry) return null;
-    if (entry.expiresAt && Date.now() > entry.expiresAt) {
-      this.store.delete(key);
-      return null;
-    }
-    return entry.value;
-  }
+const redis = new Redis({
+    host: envConfig.REDIS_HOST,
+    port: Number(envConfig.REDIS_PORT),
+    password: envConfig.REDIS_PASSWORD,
 
-  async set(key, value, mode, ttlSeconds) {
-    const expiresAt = ttlSeconds ? Date.now() + ttlSeconds * 1000 : null;
-    this.store.set(key, { value, expiresAt });
-    return 'OK';
-  }
+    connectTimeout: 10000, //ms
 
-  async del(key) {
-    return this.store.delete(key) ? 1 : 0;
-  }
-}
+    retryStrategy(times) {
+        if (times > 10) {
+            console.error('Redis retry attempts exhausted');
+            return null;
+        }
 
-const cache = new InMemoryCache();
-export default cache;
+        const delay = Math.min(times * 200, 2000);
+
+        console.log(`Retrying Redis connection in ${delay}ms...`);
+
+        return delay;
+    },
+
+    maxRetriesPerRequest: 3,
+
+    enableReadyCheck: true,
+});
+
+redis.on('connect', () => {
+    console.log('Redis socket connected');
+});
+
+redis.on('ready', () => {
+    console.log('Redis ready');
+});
+
+redis.on('reconnecting', () => {
+    console.log('Redis reconnecting...');
+});
+
+redis.on('close', () => {
+    console.log('Redis connection closed');
+});
+
+redis.on('end', () => {
+    console.log('Redis connection ended');
+});
+
+redis.on('error', (err) => {
+    console.error('Redis error:', err.message);
+});
+
+export default redis;

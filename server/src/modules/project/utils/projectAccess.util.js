@@ -26,7 +26,9 @@ export async function verifyProjectAccess(userId, projectId) {
   if (project.visibility === 'PRIVATE') {
     const member = await projectMemberQ.findMember(projectId, userId);
     if (!member) {
-      return { error: { status: 403, message: 'Access denied: not a member of this private project.' } };
+      return {
+        error: { status: 403, message: 'Access denied: not a member of this private project.' },
+      };
     }
     return { project, role: member.role, isWsAdmin: false };
   }

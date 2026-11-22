@@ -29,7 +29,9 @@ export async function create(req, res) {
     const teamMember = await teamMemberQ.findMember(teamId, req.user.id);
     const wsMember = await wsMemberQ.findMember(team.workspace_id, req.user.id);
     if (!teamMember && (!wsMember || !['OWNER', 'ADMIN'].includes(wsMember.role))) {
-      return res.status(403).json({ message: 'Access denied: must be a team member to create projects.' });
+      return res
+        .status(403)
+        .json({ message: 'Access denied: must be a team member to create projects.' });
     }
 
     if (startDate && dueDate && new Date(dueDate) < new Date(startDate)) {
@@ -150,7 +152,11 @@ export async function update(req, res) {
     }
 
     if (access.role !== 'PROJECT_OWNER' && !access.isWsAdmin) {
-      return res.status(403).json({ message: 'Access denied: only project owner or workspace admin can update project.' });
+      return res
+        .status(403)
+        .json({
+          message: 'Access denied: only project owner or workspace admin can update project.',
+        });
     }
 
     const { name, description, visibility, status, startDate, dueDate } = req.body;
@@ -195,7 +201,11 @@ export async function archive(req, res) {
     }
 
     if (access.role !== 'PROJECT_OWNER' && !access.isWsAdmin) {
-      return res.status(403).json({ message: 'Access denied: only project owner or workspace admin can archive project.' });
+      return res
+        .status(403)
+        .json({
+          message: 'Access denied: only project owner or workspace admin can archive project.',
+        });
     }
 
     await projectQ.updateStatus(projectId, 'ARCHIVED');
@@ -248,12 +258,16 @@ export async function addMember(req, res) {
     }
 
     if (access.role !== 'PROJECT_OWNER' && !access.isWsAdmin) {
-      return res.status(403).json({ message: 'Access denied: only project owner can add members.' });
+      return res
+        .status(403)
+        .json({ message: 'Access denied: only project owner can add members.' });
     }
 
     const targetTeamMember = await teamMemberQ.findMember(access.project.team_id, userId);
     if (!targetTeamMember) {
-      return res.status(400).json({ message: 'User must be a member of the team to be added to project.' });
+      return res
+        .status(400)
+        .json({ message: 'User must be a member of the team to be added to project.' });
     }
 
     const existing = await projectMemberQ.findMember(projectId, userId);
@@ -291,7 +305,11 @@ export async function addMember(req, res) {
       await conn.commit();
       return res.status(201).json({
         message: 'Project member added successfully',
-        data: { projectId: Number(projectId), userId: Number(userId), role: role || 'PROJECT_MEMBER' },
+        data: {
+          projectId: Number(projectId),
+          userId: Number(userId),
+          role: role || 'PROJECT_MEMBER',
+        },
       });
     } catch (err) {
       await conn.rollback();
@@ -317,7 +335,9 @@ export async function removeMember(req, res) {
 
     const isSelf = Number(req.user.id) === Number(targetId);
     if (access.role !== 'PROJECT_OWNER' && !access.isWsAdmin && !isSelf) {
-      return res.status(403).json({ message: 'Access denied: insufficient permissions to remove member.' });
+      return res
+        .status(403)
+        .json({ message: 'Access denied: insufficient permissions to remove member.' });
     }
 
     const target = await projectMemberQ.findMember(projectId, targetId);

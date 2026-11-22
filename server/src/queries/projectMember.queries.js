@@ -1,10 +1,10 @@
 import { query, execute } from '../config/db.js';
 
 export const findMember = async (projectId, userId) => {
-  const rows = await query(
-    'SELECT * FROM project_members WHERE project_id = ? AND user_id = ?',
-    [projectId, userId]
-  );
+  const rows = await query('SELECT * FROM project_members WHERE project_id = ? AND user_id = ?', [
+    projectId,
+    userId,
+  ]);
   return rows[0];
 };
 
@@ -27,7 +27,4 @@ export const insert = async (connOrData, maybeData) => {
 };
 
 export const remove = async (projectId, userId) =>
-  execute('DELETE FROM project_members WHERE project_id = ? AND user_id = ?', [
-    projectId,
-    userId,
-  ]);
+  execute('DELETE FROM project_members WHERE project_id = ? AND user_id = ?', [projectId, userId]);

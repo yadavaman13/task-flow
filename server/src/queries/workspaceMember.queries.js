@@ -32,13 +32,14 @@ export const insert = async (connOrData, maybeData) => {
 };
 
 export const updateRole = async (workspaceId, userId, role) =>
-  execute(
-    'UPDATE workspace_members SET role = ? WHERE workspace_id = ? AND user_id = ?',
-    [role, workspaceId, userId]
-  );
+  execute('UPDATE workspace_members SET role = ? WHERE workspace_id = ? AND user_id = ?', [
+    role,
+    workspaceId,
+    userId,
+  ]);
 
 export const remove = async (workspaceId, userId) =>
-  execute(
-    'DELETE FROM workspace_members WHERE workspace_id = ? AND user_id = ?',
-    [workspaceId, userId]
-  );
+  execute('DELETE FROM workspace_members WHERE workspace_id = ? AND user_id = ?', [
+    workspaceId,
+    userId,
+  ]);

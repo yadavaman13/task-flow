@@ -44,10 +44,10 @@ export const insert = async ({ userId, type, title, message, referenceType, refe
   );
 
 export const markRead = async (id, userId) =>
-  execute(
-    'UPDATE notifications SET is_read = TRUE, read_at = NOW() WHERE id = ? AND user_id = ?',
-    [id, userId]
-  );
+  execute('UPDATE notifications SET is_read = TRUE, read_at = NOW() WHERE id = ? AND user_id = ?', [
+    id,
+    userId,
+  ]);
 
 export const markAllRead = async (userId) =>
   execute(

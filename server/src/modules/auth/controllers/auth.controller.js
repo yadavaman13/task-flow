@@ -1,21 +1,32 @@
 import bcrypt from 'bcrypt';
+import redis from '../../../config/cache.config.js';
 import { envConfig } from '../../../config/env.config.js';
 import { signJwt } from '../../../core/utils/token.js';
 import {
   findUserByEmail,
+  getUserByEmail,
   createUser,
   findById,
   findByIdWithPassword,
+  updateUser,
   updateProfile as updateProfileQuery,
   updatePassword as updatePasswordQuery,
 } from '../../../queries/user.queries.js';
-import { getOtpHtml, issueOtp, OTP_PURPOSES } from '../../../utils/otp.utils.js';
+import {
+  getOtpHtml,
+  issueOtp,
+  verifyOtp as verifyOtpUtil,
+  resendOtp,
+  normalizeEmail,
+  normalizeOtp,
+  OTP_PURPOSES,
+} from '../../../utils/otp.utils.js';
 
 export async function register(req, res) {
   try {
     const { name, email, password } = req.body;
 
-    const normalizedEmail = typeof email === 'string' ? email.trim().toLowerCase() : '';
+    const normalizedEmail = normalizeEmail(email);
     const normalizedName = typeof name === 'string' ? name.trim() : '';
     const normalizedPassword = typeof password === 'string' ? password.trim() : '';
 
@@ -32,9 +43,21 @@ export async function register(req, res) {
       });
     }
 
+    // Check if this email was pre-verified via OTP stored in Redis
+    const isPreVerified = (await redis.get(`verified_email:${normalizedEmail}`)) === 'true';
+
     const hashedPassword = await bcrypt.hash(normalizedPassword, envConfig.bcrypt.saltRounds);
 
-    const user = await createUser({ normalizedName, normalizedEmail, hashedPassword });
+    const user = await createUser({
+      normalizedName,
+      normalizedEmail,
+      hashedPassword,
+      isVerified: isPreVerified,
+    });
+
+    if (isPreVerified) {
+      await redis.del(`verified_email:${normalizedEmail}`);
+    }
 
     return res.status(201).json({
       message: 'User registered successfully',
@@ -57,7 +80,7 @@ export async function login(req, res) {
   try {
     const { email, password } = req.body;
 
-    const normalizedEmail = typeof email === 'string' ? email.trim().toLowerCase() : '';
+    const normalizedEmail = normalizeEmail(email);
     const normalizedPassword = typeof password === 'string' ? password.trim() : '';
 
     if (!normalizedEmail || !normalizedPassword) {
@@ -101,6 +124,158 @@ export async function login(req, res) {
     return res.status(500).json({ message: 'Internal Server Error' });
   }
 }
+
+export async function sendVerificationOtp(req, res) {
+  try {
+    const email = normalizeEmail(req.body?.email);
+
+    if (!email) {
+      return res.status(400).json({
+        message: 'Please enter email to send verification email',
+      });
+    }
+
+    const otpResult = await issueOtp({
+      email,
+      purpose: OTP_PURPOSES.VERIFY_EMAIL,
+      subject: 'Email Verification OTP',
+      buildHtml: getOtpHtml,
+    });
+
+    if (!otpResult.ok) {
+      return res.status(400).json({
+        message: 'Unable to generate OTP',
+      });
+    }
+
+    return res.status(200).json({
+      message: 'Email verification OTP sent successfully',
+      data: {
+        expiresIn: otpResult.expiresIn,
+      },
+    });
+  } catch (err) {
+    console.log(err);
+    return res.status(500).json({ message: 'Internal Server Error' });
+  }
+}
+
+export async function resendVerificationOtp(req, res) {
+  try {
+    const email = normalizeEmail(req.body?.email);
+
+    if (!email) {
+      return res.status(400).json({
+        message: 'Please enter email to resend verification email',
+      });
+    }
+
+    const result = await resendOtp({
+      email,
+      purpose: OTP_PURPOSES.VERIFY_EMAIL,
+      subject: 'Email Verification OTP',
+      buildHtml: getOtpHtml,
+    });
+
+    if (!result.ok) {
+      if (result.reason === 'cooldown') {
+        return res.status(429).json({
+          message: `Please wait ${result.cooldownRemaining}s before requesting a new OTP`,
+          cooldownRemaining: result.cooldownRemaining,
+        });
+      }
+      if (result.reason === 'resend-limit') {
+        return res.status(429).json({
+          message: 'Maximum OTP resend limit reached. Please try again later.',
+        });
+      }
+      if (result.reason === 'missing') {
+        return res.status(404).json({
+          message: 'No active OTP request found. Please request a new OTP.',
+        });
+      }
+      return res.status(400).json({
+        message: 'Unable to resend OTP',
+      });
+    }
+
+    return res.status(200).json({
+      message: 'Email verification OTP resent successfully',
+      data: {
+        expiresIn: result.expiresIn,
+      },
+    });
+  } catch (err) {
+    console.log(err);
+    return res.status(500).json({ message: 'Internal Server Error' });
+  }
+}
+
+export async function verifyOtp(req, res) {
+  try {
+    const email = normalizeEmail(req.body?.email);
+    const otp = normalizeOtp(req.body?.otp);
+
+    if (!email || !otp) {
+      return res.status(400).json({
+        message: 'Email and OTP are required',
+      });
+    }
+
+    const verifyResult = await verifyOtpUtil({
+      email,
+      otp,
+      purpose: OTP_PURPOSES.VERIFY_EMAIL,
+    });
+
+    if (!verifyResult.ok) {
+      if (verifyResult.reason === 'locked') {
+        return res.status(429).json({
+          message: 'Too many attempts. Please register again.',
+        });
+      }
+
+      if (verifyResult.reason === 'expired') {
+        return res.status(400).json({
+          message: 'OTP expired',
+        });
+      }
+
+      if (verifyResult.reason === 'invalid') {
+        return res.status(400).json({
+          message: 'Invalid OTP',
+          attemptsLeft: verifyResult.attemptsLeft,
+          cooldownRemaining: verifyResult.cooldownRemaining,
+        });
+      }
+
+      return res.status(400).json({
+        message: 'OTP expired or invalid',
+      });
+    }
+
+    const user = await getUserByEmail(email);
+    if (user) {
+      await updateUser(user.id, { emailVerified: true, isActive: true });
+    } else {
+      await redis.set(`verified_email:${email}`, 'true', 'EX', 3600);
+    }
+
+    return res.status(200).json({
+      message: 'Email verified successfully',
+      data: {
+        email,
+        isVerified: true,
+      },
+    });
+  } catch (err) {
+    console.log(err);
+    return res.status(500).json({ message: 'Internal Server Error' });
+  }
+}
+
+/** Backward compatibility alias for verifyOtp */
+export const verifyEmail = verifyOtp;
 
 export async function getProfile(req, res) {
   try {
@@ -180,39 +355,6 @@ export async function changePassword(req, res) {
 
     return res.status(200).json({
       message: 'Password changed successfully',
-    });
-  } catch (err) {
-    console.log(err);
-    return res.status(500).json({ message: 'Internal Server Error' });
-  }
-}
-
-export async function sendVerificationOtp(req, res) {
-  try {
-    const { email } = req.body;
-    const normalizedEmail = typeof email === 'string' ? email.trim().toLowerCase() : '';
-
-    if (!normalizedEmail) {
-      return res.status(400).json({
-        message: 'Please enter email to send verification email',
-      });
-    }
-
-    const otpResult = await issueOtp({
-      email: normalizedEmail,
-      purpose: OTP_PURPOSES.VERIFY_EMAIL,
-      subject: 'Email Verification OTP',
-      buildHtml: getOtpHtml,
-    });
-
-    if (!otpResult.ok) {
-      return res.status(400).json({
-        message: 'Unable to generate OTP',
-      });
-    }
-
-    return res.status(200).json({
-      message: 'Email verification OTP sent successfully',
     });
   } catch (err) {
     console.log(err);

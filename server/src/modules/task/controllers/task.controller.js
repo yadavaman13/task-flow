@@ -299,7 +299,9 @@ export async function remove(req, res) {
     const isProjectOwner = access.role === 'PROJECT_OWNER';
 
     if (!isCreator && !isProjectOwner && !access.isWsAdmin) {
-      return res.status(403).json({ message: 'Access denied: only task creator or project owner can delete task.' });
+      return res
+        .status(403)
+        .json({ message: 'Access denied: only task creator or project owner can delete task.' });
     }
 
     await taskQ.remove(taskId);
