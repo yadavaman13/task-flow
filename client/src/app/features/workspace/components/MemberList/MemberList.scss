@@ -1,0 +1,134 @@
+@use '@/styles/variables' as *;
+@use '@/styles/mixins' as *;
+
+.member-list {
+  background-color: $color-white;
+  border: 1px solid $border-color;
+  border-radius: $border-radius-lg;
+  overflow: hidden;
+
+  &__wrapper {
+    overflow-x: auto;
+  }
+}
+
+.member-table {
+  width: 100%;
+  text-align: left;
+  font-size: $font-size-sm;
+
+  thead th {
+    background-color: $color-grey-50;
+    color: $color-grey-600;
+    font-size: $font-size-xs;
+    font-weight: $font-weight-medium;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    padding: $spacing-3 $spacing-4;
+    border-bottom: 1px solid $border-color;
+  }
+
+  &__row {
+    border-bottom: 1px solid $border-color;
+
+    &:last-child {
+      border-bottom: none;
+    }
+  }
+
+  td {
+    padding: $spacing-3 $spacing-4;
+    vertical-align: middle;
+  }
+
+  &__user-cell {
+    display: flex;
+    align-items: center;
+    gap: $spacing-3;
+  }
+}
+
+.member-avatar {
+  @include flex-center;
+  width: 34px;
+  height: 34px;
+  background-color: $color-grey-200;
+  color: $color-grey-800;
+  border-radius: $border-radius-full;
+  font-size: $font-size-xs;
+  font-weight: $font-weight-semibold;
+  flex-shrink: 0;
+}
+
+.member-details {
+  display: flex;
+  flex-direction: column;
+}
+
+.member-name {
+  font-weight: $font-weight-medium;
+  color: $color-grey-900;
+  display: flex;
+  align-items: center;
+  gap: $spacing-2;
+}
+
+.member-self-badge {
+  font-size: $font-size-xs;
+  color: $color-grey-500;
+  font-weight: $font-weight-regular;
+}
+
+.member-email {
+  font-size: $font-size-xs;
+  color: $color-grey-500;
+}
+
+.member-role-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: $spacing-1;
+  font-size: $font-size-xs;
+  font-weight: $font-weight-semibold;
+  padding: 2px $spacing-2;
+  border-radius: $border-radius-full;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+
+  &--owner {
+    background-color: $color-black;
+    color: $color-white;
+  }
+
+  &--admin {
+    background-color: $color-grey-800;
+    color: $color-white;
+  }
+
+  &--member {
+    background-color: $color-grey-100;
+    color: $color-grey-700;
+  }
+}
+
+.member-role-select {
+  @include input-base;
+  padding: $spacing-1 $spacing-2;
+  font-size: $font-size-xs;
+  width: auto;
+  min-width: 110px;
+}
+
+.member-joined {
+  color: $color-grey-500;
+  font-size: $font-size-xs;
+}
+
+.member-remove-btn {
+  color: $color-error;
+
+  &:hover {
+    background-color: $color-error-bg;
+    color: $color-error;
+  }
+}

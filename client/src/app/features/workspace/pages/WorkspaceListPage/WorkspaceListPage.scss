@@ -1,0 +1,66 @@
+@use '@/styles/variables' as *;
+@use '@/styles/mixins' as *;
+
+.workspace-list-page {
+  @include flex-column;
+  gap: $spacing-6;
+
+  &__header {
+    @include flex-between;
+    gap: $spacing-4;
+    flex-wrap: wrap;
+  }
+
+  &__title-group {
+    @include flex-column;
+    gap: $spacing-1;
+  }
+
+  &__title {
+    font-size: $font-size-2xl;
+    font-weight: $font-weight-bold;
+    color: $color-black;
+  }
+
+  &__subtitle {
+    font-size: $font-size-sm;
+    color: $color-grey-500;
+  }
+
+  &__toolbar {
+    max-width: 320px;
+  }
+
+  &__loading {
+    @include flex-center;
+    padding: $spacing-16;
+  }
+
+  &__grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+    gap: $spacing-5;
+
+    @include mobile {
+      grid-template-columns: 1fr;
+    }
+  }
+}
+
+.workspace-search {
+  position: relative;
+  display: flex;
+  align-items: center;
+
+  &__icon {
+    position: absolute;
+    left: $spacing-3;
+    color: $color-grey-400;
+    pointer-events: none;
+  }
+
+  &__input {
+    @include input-base;
+    padding-left: $spacing-8;
+  }
+}
