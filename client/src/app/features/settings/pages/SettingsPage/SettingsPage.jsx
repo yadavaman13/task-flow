@@ -194,7 +194,6 @@ export default function SettingsPage() {
       {/* Account Info Footer */}
       <div className="settings-page__info-footer">
         <span>Account Created: <strong>{formatDate(user?.created_at)}</strong></span>
-        <span>User ID: <strong>#{user?.id || '—'}</strong></span>
       </div>
     </div>
   );

@@ -19,7 +19,6 @@ export default function TopBar({
         >
           <Menu size={20} />
         </button>
-        <h2 className="topbar__title">{title}</h2>
       </div>
 
       <div className="topbar__right">
@@ -34,7 +33,7 @@ export default function TopBar({
 
         <Link to="/settings" className="topbar__profile-link" title="Account settings">
           <div className="topbar__avatar">
-            {user?.name ? formatInitials(user.name) : <User size={16} />}
+            {user.avatar_url}
           </div>
         </Link>
       </div>

@@ -8,9 +8,6 @@ export default function AuthLayout() {
       <div className="auth-layout__container">
         <div className="auth-layout__brand">
           <Link to="/" className="auth-layout__logo">
-            <div className="auth-layout__logo-icon">
-              <CheckSquare size={22} />
-            </div>
             <span className="auth-layout__logo-text">TaskFlow</span>
           </Link>
           <p className="auth-layout__subtitle">Manage teams, projects, and tasks with ease</p>
@@ -20,9 +17,6 @@ export default function AuthLayout() {
           <Outlet />
         </div>
 
-        <div className="auth-layout__footer">
-          <p>&copy; {new Date().getFullYear()} TaskFlow. Minimalist Project Management.</p>
-        </div>
       </div>
     </div>
   );

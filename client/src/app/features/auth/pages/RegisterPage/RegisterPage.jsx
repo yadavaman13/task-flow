@@ -6,11 +6,12 @@ import { useAuth } from '../../hooks/useAuth';
 import OtpVerification from '../../components/OtpVerification/OtpVerification';
 import './RegisterPage.scss';
 
+
 export default function RegisterPage() {
   const [formData, setFormData] = useState({ name: '', email: '', password: '' });
   const [errors, setErrors] = useState({});
   const [showOtpModal, setShowOtpModal] = useState(false);
-  const { handleRegister, isSubmitting } = useAuth();
+  const { handleRegister, handleSendOtp, isSubmitting } = useAuth();
   const navigate = useNavigate();
 
   const handleChange = (e) => {
@@ -45,6 +46,8 @@ export default function RegisterPage() {
     const result = await handleRegister(formData);
     if (result.success) {
       // Prompt user for OTP verification or redirect to login
+      const {email} = formData;
+      handleSendOtp(email);
       setShowOtpModal(true);
     }
   };
@@ -63,7 +66,7 @@ export default function RegisterPage() {
           value={formData.name}
           onChange={handleChange}
           error={errors.name}
-          placeholder="Jane Doe"
+          placeholder="Enter your name"
           required
           autoComplete="name"
         />
@@ -75,7 +78,7 @@ export default function RegisterPage() {
           value={formData.email}
           onChange={handleChange}
           error={errors.email}
-          placeholder="name@example.com"
+          placeholder="Enter your email address"
           required
           autoComplete="email"
         />

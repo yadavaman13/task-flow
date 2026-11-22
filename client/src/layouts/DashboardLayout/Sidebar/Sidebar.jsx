@@ -60,9 +60,6 @@ export default function Sidebar({
       <aside className={`sidebar ${isOpen ? 'sidebar--open' : ''}`}>
         <div className="sidebar__header">
           <div className="sidebar__brand">
-            <div className="sidebar__logo-icon">
-              <CheckSquare size={20} />
-            </div>
             <span className="sidebar__brand-title">TaskFlow</span>
           </div>
           {onClose && (

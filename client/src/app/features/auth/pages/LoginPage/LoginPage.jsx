@@ -55,7 +55,7 @@ export default function LoginPage() {
           value={formData.email}
           onChange={handleChange}
           error={errors.email}
-          placeholder="name@example.com"
+          placeholder="Enter your email"
           required
           autoComplete="email"
         />
