@@ -1,0 +1,210 @@
+@use '@/styles/variables' as *;
+@use '@/styles/mixins' as *;
+
+.team-detail-page {
+  @include flex-column;
+  gap: $spacing-6;
+
+  &__loading,
+  &__not-found {
+    @include flex-center;
+    flex-direction: column;
+    gap: $spacing-4;
+    padding: $spacing-16;
+  }
+
+  &__nav {
+    display: flex;
+    align-items: center;
+  }
+
+  &__back-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: $spacing-2;
+    font-size: $font-size-sm;
+    color: $color-grey-500;
+    transition: color $transition-fast;
+
+    &:hover {
+      color: $color-black;
+    }
+  }
+}
+
+.team-detail-header {
+  @include card;
+  @include flex-between;
+  gap: $spacing-4;
+  flex-wrap: wrap;
+
+  &__main {
+    display: flex;
+    align-items: flex-start;
+    gap: $spacing-4;
+  }
+
+  &__icon {
+    @include flex-center;
+    width: 44px;
+    height: 44px;
+    border-radius: $border-radius-lg;
+    background-color: $color-grey-100;
+    color: $color-black;
+    flex-shrink: 0;
+  }
+
+  &__info {
+    @include flex-column;
+    gap: $spacing-1;
+  }
+
+  &__title-row {
+    display: flex;
+    align-items: center;
+    gap: $spacing-3;
+  }
+
+  &__title {
+    font-size: $font-size-xl;
+    font-weight: $font-weight-bold;
+    color: $color-black;
+  }
+
+  &__archived-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: $spacing-1;
+    font-size: $font-size-xs;
+    font-weight: $font-weight-semibold;
+    padding: 2px $spacing-2;
+    border-radius: $border-radius-full;
+    background-color: $color-grey-200;
+    color: $color-grey-600;
+  }
+
+  &__desc {
+    font-size: $font-size-sm;
+    color: $color-grey-500;
+  }
+
+  &__actions {
+    display: flex;
+    align-items: center;
+    gap: $spacing-3;
+  }
+}
+
+.team-detail-tabs {
+  display: flex;
+  gap: $spacing-2;
+  border-bottom: 1px solid $border-color;
+  padding-bottom: $spacing-2;
+}
+
+.team-detail-tab {
+  display: inline-flex;
+  align-items: center;
+  gap: $spacing-2;
+  padding: $spacing-2 $spacing-4;
+  border-radius: $border-radius-md;
+  font-size: $font-size-sm;
+  font-weight: $font-weight-medium;
+  color: $color-grey-600;
+  transition: all $transition-fast;
+
+  &:hover {
+    background-color: $color-grey-100;
+    color: $color-black;
+  }
+
+  &--active {
+    background-color: $color-black;
+    color: $color-white;
+
+    &:hover {
+      background-color: $color-grey-800;
+      color: $color-white;
+    }
+  }
+}
+
+.team-member-list {
+  @include flex-column;
+  gap: $spacing-2;
+}
+
+.team-member-item {
+  @include card;
+  @include flex-between;
+  padding: $spacing-3 $spacing-4;
+
+  &__left {
+    display: flex;
+    align-items: center;
+    gap: $spacing-3;
+  }
+
+  &__avatar {
+    @include flex-center;
+    width: 32px;
+    height: 32px;
+    border-radius: $border-radius-full;
+    background-color: $color-grey-200;
+    color: $color-grey-800;
+    font-size: $font-size-xs;
+    font-weight: $font-weight-semibold;
+  }
+
+  &__info {
+    display: flex;
+    flex-direction: column;
+  }
+
+  &__name {
+    font-size: $font-size-sm;
+    font-weight: $font-weight-medium;
+    color: $color-grey-900;
+  }
+
+  &__email {
+    font-size: $font-size-xs;
+    color: $color-grey-500;
+  }
+
+  &__right {
+    display: flex;
+    align-items: center;
+    gap: $spacing-3;
+  }
+
+  &__role {
+    font-size: $font-size-xs;
+    font-weight: $font-weight-semibold;
+    padding: 2px $spacing-2;
+    border-radius: $border-radius-full;
+    background-color: $color-grey-100;
+    color: $color-grey-700;
+  }
+}
+
+.team-settings-tab {
+  max-width: 600px;
+}
+
+.team-settings-form {
+  @include card;
+  @include flex-column;
+  gap: $spacing-4;
+
+  h3 {
+    font-size: $font-size-base;
+    font-weight: $font-weight-semibold;
+    margin-bottom: $spacing-2;
+  }
+
+  &__actions {
+    @include flex-between;
+    margin-top: $spacing-2;
+  }
+}

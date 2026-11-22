@@ -1,13 +1,17 @@
 import { useEffect, useState, useCallback } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { Building2, Users, Settings, UserPlus, ArrowLeft, LayoutDashboard, Shield } from 'lucide-react';
+import { Building2, Users, Settings, UserPlus, ArrowLeft, LayoutDashboard, Shield, Plus, FolderKanban } from 'lucide-react';
 import Button from '@/components/Shared/Buttons/Button/Button';
 import Input from '@/components/Shared/Form/Input/Input';
 import Textarea from '@/components/Shared/Form/Textarea/Textarea';
 import Spinner from '@/components/Shared/Feedback/Spinner/Spinner';
+import EmptyState from '@/components/Shared/Feedback/EmptyState/EmptyState';
 import MemberList from '../../components/MemberList/MemberList';
 import InviteModal from '@/app/features/invitation/components/InviteModal/InviteModal';
+import TeamCard from '@/app/features/team/components/TeamCard/TeamCard';
+import CreateTeamModal from '@/app/features/team/components/CreateTeamModal/CreateTeamModal';
 import { useWorkspace } from '../../hooks/useWorkspace';
+import { useTeam } from '@/app/features/team/hooks/useTeam';
 import { useAuthContext } from '@/app/features/auth/context/auth.context';
 import './WorkspaceDetailPage.scss';
 
@@ -26,17 +30,20 @@ export default function WorkspaceDetailPage() {
     handleRemoveMember,
     isSubmitting,
   } = useWorkspace();
+  const { teams, loadWorkspaceTeams } = useTeam();
 
-  const [activeTab, setActiveTab] = useState('members'); // 'members' | 'settings'
+  const [activeTab, setActiveTab] = useState('teams'); // 'teams' | 'members' | 'settings'
   const [editForm, setEditForm] = useState({ name: '', description: '' });
   const [isInviteModalOpen, setIsInviteModalOpen] = useState(false);
+  const [isCreateTeamOpen, setIsCreateTeamOpen] = useState(false);
 
   const loadData = useCallback(() => {
     if (workspaceId) {
       loadWorkspace(workspaceId);
       loadMembers(workspaceId);
+      loadWorkspaceTeams(workspaceId);
     }
-  }, [workspaceId, loadWorkspace, loadMembers]);
+  }, [workspaceId, loadWorkspace, loadMembers, loadWorkspaceTeams]);
 
   useEffect(() => {
     loadData();
@@ -122,6 +129,14 @@ export default function WorkspaceDetailPage() {
 
       <div className="workspace-detail-tabs">
         <button
+          className={`workspace-detail-tab ${activeTab === 'teams' ? 'workspace-detail-tab--active' : ''}`}
+          onClick={() => setActiveTab('teams')}
+        >
+          <FolderKanban size={16} />
+          <span>Teams ({teams.length})</span>
+        </button>
+
+        <button
           className={`workspace-detail-tab ${activeTab === 'members' ? 'workspace-detail-tab--active' : ''}`}
           onClick={() => setActiveTab('members')}
         >
@@ -139,6 +154,56 @@ export default function WorkspaceDetailPage() {
       </div>
 
       <div className="workspace-detail-content">
+        {activeTab === 'teams' && (
+          <div className="workspace-teams-tab">
+            <div className="workspace-teams-tab__header" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1rem' }}>
+              <h3 style={{ fontSize: '1rem', fontWeight: 600 }}>Workspace Teams</h3>
+              <Button
+                variant="primary"
+                size="sm"
+                icon={Plus}
+                onClick={() => setIsCreateTeamOpen(true)}
+              >
+                Create Team
+              </Button>
+            </div>
+
+            {teams.length === 0 ? (
+              <EmptyState
+                icon={FolderKanban}
+                title="No teams in this workspace"
+                description="Organize your workspace into specialized engineering, product, or design teams."
+                action={
+                  <Button
+                    variant="primary"
+                    icon={Plus}
+                    onClick={() => setIsCreateTeamOpen(true)}
+                  >
+                    Create First Team
+                  </Button>
+                }
+              />
+            ) : (
+              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))', gap: '1rem' }}>
+                {teams.map((t) => (
+                  <TeamCard
+                    key={t.id || t._id}
+                    team={t}
+                    onClick={() => navigate(`/workspaces/${workspaceId}/teams/${t.id || t._id}`)}
+                  />
+                ))}
+              </div>
+            )}
+
+            <CreateTeamModal
+              isOpen={isCreateTeamOpen}
+              onClose={() => setIsCreateTeamOpen(false)}
+              workspaceId={workspaceId}
+              onCreated={() => loadWorkspaceTeams(workspaceId)}
+            />
+          </div>
+        )}
+
         {activeTab === 'members' && (
           <div className="workspace-members-tab">
             <div className="workspace-members-tab__header">
