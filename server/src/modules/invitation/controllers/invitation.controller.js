@@ -44,7 +44,7 @@ export async function send(req, res) {
     const hours = envConfig.invitation.expiresInHours || 72;
     const expiresAt = new Date(Date.now() + hours * 3600 * 1000);
 
-    await invitationQ.insert({
+    const result = await invitationQ.insert({
       workspaceId,
       email: normalizedEmail,
       invitedBy: req.user.id,
@@ -74,6 +74,7 @@ export async function send(req, res) {
     return res.status(201).json({
       message: 'Invitation sent successfully',
       data: {
+        id: result?.insertId,
         email: normalizedEmail,
         role: role || 'MEMBER',
         token: rawToken,
