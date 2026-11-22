@@ -11,10 +11,26 @@ createRoot(document.getElementById('root')).render(
       toastOptions={{
         duration: 3000,
         style: {
-          background: '#000000',
-          color: '#FFFFFF',
+          background: '#FFFFFF',
+          color: '#000000',
+          border: '1px solid #000000',
+          boxShadow: '0 4px 12px rgba(0, 0, 0, 0.08)',
           fontSize: '14px',
+          fontWeight: 500,
           borderRadius: '8px',
+          padding: '12px 16px',
+        },
+        success: {
+          iconTheme: {
+            primary: '#000000',
+            secondary: '#FFFFFF',
+          },
+        },
+        error: {
+          iconTheme: {
+            primary: '#000000',
+            secondary: '#FFFFFF',
+          },
         },
       }}
     />
