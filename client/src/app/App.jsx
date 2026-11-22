@@ -6,6 +6,7 @@ import { TeamProvider } from './features/team/context/team.context';
 import { ProjectProvider } from './features/project/context/project.context';
 import { TaskProvider } from './features/task/context/task.context';
 import { CommentProvider } from './features/comment/context/comment.context';
+import { NotificationProvider } from './features/notification/context/notification.context';
 import { router } from './App.routes';
 
 export default function App() {
@@ -17,7 +18,9 @@ export default function App() {
             <ProjectProvider>
               <TaskProvider>
                 <CommentProvider>
-                  <RouterProvider router={router} />
+                  <NotificationProvider>
+                    <RouterProvider router={router} />
+                  </NotificationProvider>
                 </CommentProvider>
               </TaskProvider>
             </ProjectProvider>

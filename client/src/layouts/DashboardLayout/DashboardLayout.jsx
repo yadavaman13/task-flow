@@ -1,28 +1,27 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Outlet } from 'react-router-dom';
 import Sidebar from './Sidebar/Sidebar';
 import TopBar from './TopBar/TopBar';
-import { storage } from '@/utils/storage';
+import { useAuth } from '@/app/features/auth/hooks/useAuth';
+import { useNotification } from '@/app/features/notification/hooks/useNotification';
+import { useWorkspace } from '@/app/features/workspace/hooks/useWorkspace';
 import './DashboardLayout.scss';
 
-export default function DashboardLayout({ user: propUser, currentWorkspace, unreadCount = 0, onLogout }) {
+export default function DashboardLayout() {
   const [sidebarOpen, setSidebarOpen] = useState(false);
-  const user = propUser || storage.getUser();
+  const { user, handleLogout } = useAuth();
+  const { unreadCount, loadUnreadCount } = useNotification();
+  const { selectedWorkspace } = useWorkspace();
 
-  const handleLogout = () => {
-    if (onLogout) {
-      onLogout();
-    } else {
-      storage.clear();
-      window.location.href = '/login';
-    }
-  };
+  useEffect(() => {
+    loadUnreadCount();
+  }, [loadUnreadCount]);
 
   return (
     <div className="dashboard-layout">
       <Sidebar
         user={user}
-        currentWorkspace={currentWorkspace}
+        currentWorkspace={selectedWorkspace}
         onLogout={handleLogout}
         isOpen={sidebarOpen}
         onClose={() => setSidebarOpen(false)}
