@@ -1,0 +1,37 @@
+@use '@/styles/variables' as *;
+@use '@/styles/mixins' as *;
+
+.comment-input-form {
+  @include flex-column;
+  gap: $spacing-2;
+  background-color: $color-white;
+  border: 1px solid $border-color;
+  border-radius: $border-radius-md;
+  padding: $spacing-3;
+  transition: border-color $transition-fast;
+
+  &:focus-within {
+    border-color: $color-black;
+  }
+
+  &__textarea {
+    width: 100%;
+    border: none;
+    outline: none;
+    resize: vertical;
+    min-height: 56px;
+    font-size: $font-size-sm;
+    font-family: $font-family-base;
+    color: $color-grey-900;
+    background: transparent;
+
+    &::placeholder {
+      color: $color-grey-400;
+    }
+  }
+
+  &__actions {
+    display: flex;
+    justify-content: flex-end;
+  }
+}

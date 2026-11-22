@@ -10,11 +10,16 @@ import TaskStatusBadge from '../../components/TaskStatusBadge/TaskStatusBadge';
 import { TASK_STATUSES, TASK_PRIORITIES } from '@/utils/constants';
 import { formatDate } from '@/utils/formatters';
 import { useTask } from '../../hooks/useTask';
+import { useAuthContext } from '@/app/features/auth/context/auth.context';
+import { useComment } from '@/app/features/comment/hooks/useComment';
+import CommentInput from '@/app/features/comment/components/CommentInput/CommentInput';
+import CommentList from '@/app/features/comment/components/CommentList/CommentList';
 import './TaskDetailPage.scss';
 
 export default function TaskDetailPage() {
   const { taskId } = useParams();
   const navigate = useNavigate();
+  const { user } = useAuthContext();
   const {
     selectedTask,
     loading,
@@ -24,6 +29,15 @@ export default function TaskDetailPage() {
     handleDeleteTask,
     isSubmitting,
   } = useTask();
+  const {
+    comments,
+    loadTaskComments,
+    handleAddComment,
+    handleUpdateComment,
+    handleDeleteComment,
+    loading: commentsLoading,
+    isSubmitting: commentSubmitting,
+  } = useComment();
 
   const [editForm, setEditForm] = useState({
     title: '',
@@ -35,8 +49,9 @@ export default function TaskDetailPage() {
   const loadData = useCallback(() => {
     if (taskId) {
       loadTask(taskId);
+      loadTaskComments(taskId);
     }
-  }, [taskId, loadTask]);
+  }, [taskId, loadTask, loadTaskComments]);
 
   useEffect(() => {
     loadData();
@@ -172,8 +187,26 @@ export default function TaskDetailPage() {
             </div>
           </form>
 
-          {/* Comments section is mounted here in Task 12 */}
-          <div id="task-comments-root" />
+          {/* Comments section */}
+          <div className="task-comments-section" style={{ marginTop: '2rem', display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+              <MessageSquare size={18} />
+              <h3 style={{ fontSize: '1rem', fontWeight: 600 }}>Comments ({comments.length})</h3>
+            </div>
+
+            <CommentInput
+              onSubmit={(text) => handleAddComment(taskId, text)}
+              isSubmitting={commentSubmitting}
+            />
+
+            <CommentList
+              comments={comments}
+              currentUserId={user?.id}
+              onUpdateComment={handleUpdateComment}
+              onDeleteComment={handleDeleteComment}
+              loading={commentsLoading}
+            />
+          </div>
         </div>
 
         <div className="task-detail-layout__sidebar">

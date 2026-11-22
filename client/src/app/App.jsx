@@ -5,6 +5,7 @@ import { InvitationProvider } from './features/invitation/context/invitation.con
 import { TeamProvider } from './features/team/context/team.context';
 import { ProjectProvider } from './features/project/context/project.context';
 import { TaskProvider } from './features/task/context/task.context';
+import { CommentProvider } from './features/comment/context/comment.context';
 import { router } from './App.routes';
 
 export default function App() {
@@ -15,7 +16,9 @@ export default function App() {
           <TeamProvider>
             <ProjectProvider>
               <TaskProvider>
-                <RouterProvider router={router} />
+                <CommentProvider>
+                  <RouterProvider router={router} />
+                </CommentProvider>
               </TaskProvider>
             </ProjectProvider>
           </TeamProvider>

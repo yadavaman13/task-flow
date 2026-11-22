@@ -1,0 +1,105 @@
+@use '@/styles/variables' as *;
+@use '@/styles/mixins' as *;
+
+.comment-list-loading {
+  @include flex-center;
+  padding: $spacing-6;
+}
+
+.comment-list {
+  @include flex-column;
+  gap: $spacing-4;
+
+  &__empty {
+    font-size: $font-size-sm;
+    color: $color-grey-400;
+    text-align: center;
+    padding: $spacing-6 0;
+  }
+}
+
+.comment-item {
+  display: flex;
+  gap: $spacing-3;
+  padding: $spacing-3 $spacing-4;
+  background-color: $color-white;
+  border: 1px solid $border-color;
+  border-radius: $border-radius-md;
+
+  &__avatar {
+    @include flex-center;
+    width: 32px;
+    height: 32px;
+    border-radius: $border-radius-full;
+    background-color: $color-grey-200;
+    color: $color-grey-800;
+    font-size: $font-size-xs;
+    font-weight: $font-weight-semibold;
+    flex-shrink: 0;
+  }
+
+  &__body {
+    flex: 1;
+    @include flex-column;
+    gap: $spacing-1;
+  }
+
+  &__header {
+    @include flex-between;
+  }
+
+  &__meta {
+    display: flex;
+    align-items: center;
+    gap: $spacing-2;
+  }
+
+  &__author {
+    font-size: $font-size-sm;
+    font-weight: $font-weight-medium;
+    color: $color-grey-900;
+  }
+
+  &__time {
+    font-size: $font-size-xs;
+    color: $color-grey-400;
+  }
+
+  &__actions {
+    display: flex;
+    align-items: center;
+    gap: 2px;
+  }
+
+  &__text {
+    font-size: $font-size-sm;
+    color: $color-grey-800;
+    line-height: $line-height-base;
+    white-space: pre-wrap;
+  }
+}
+
+.comment-delete-btn {
+  color: $color-error;
+
+  &:hover {
+    background-color: $color-error-bg;
+  }
+}
+
+.comment-edit-box {
+  @include flex-column;
+  gap: $spacing-2;
+  margin-top: $spacing-1;
+}
+
+.comment-edit-textarea {
+  @include input-base;
+  resize: vertical;
+}
+
+.comment-edit-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: $spacing-2;
+}
