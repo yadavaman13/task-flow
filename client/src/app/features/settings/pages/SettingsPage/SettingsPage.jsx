@@ -79,7 +79,6 @@ export default function SettingsPage() {
     if (!profileForm.name.trim()) return;
     await handleUpdateProfile({
       name: profileForm.name.trim(),
-      ...(profileForm.avatar_url ? { avatar_url: profileForm.avatar_url.trim() } : {}),
     });
   };
 
@@ -155,7 +154,6 @@ export default function SettingsPage() {
             </div>
 
             <div className="settings-card__avatar-info">
-              <span className="settings-card__user-email">{user?.email}</span>
               <span className="settings-card__verified-badge">
                 {user?.is_verified ? (
                   <>
@@ -171,13 +169,14 @@ export default function SettingsPage() {
               <div className="settings-card__upload-actions">
                 <Button
                   type="button"
-                  variant="outline"
-                  size="sm"
+                  variant="primary"
+                  size="md"
                   onClick={() => fileInputRef.current?.click()}
                   loading={isUploadingAvatar}
                   disabled={isUploadingAvatar}
+                  className="settings-card__upload-btn"
                 >
-                  <Upload size={14} /> Upload Avatar
+                  <Upload size={16} /> Upload New Avatar
                 </Button>
                 <span className="settings-card__upload-hint">JPG, PNG, or WEBP (max 5MB)</span>
               </div>
@@ -202,11 +201,12 @@ export default function SettingsPage() {
             />
 
             <Input
-              label="Avatar URL (optional)"
-              name="avatar_url"
-              value={profileForm.avatar_url}
-              onChange={(e) => setProfileForm((p) => ({ ...p, avatar_url: e.target.value }))}
-              placeholder="https://..."
+              label="Email Address"
+              name="email"
+              type="email"
+              value={user?.email || ''}
+              disabled
+              helperText="Email address associated with your account"
             />
 
             <div className="settings-card__actions">
