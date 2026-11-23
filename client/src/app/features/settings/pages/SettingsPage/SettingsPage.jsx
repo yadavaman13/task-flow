@@ -170,13 +170,14 @@ export default function SettingsPage() {
                 <Button
                   type="button"
                   variant="primary"
-                  size="md"
+                  size="sm"
+                  icon={Upload}
                   onClick={() => fileInputRef.current?.click()}
                   loading={isUploadingAvatar}
                   disabled={isUploadingAvatar}
                   className="settings-card__upload-btn"
                 >
-                  <Upload size={16} /> Upload New Avatar
+                  Upload New Avatar
                 </Button>
                 <span className="settings-card__upload-hint">JPG, PNG, or WEBP (max 5MB)</span>
               </div>

@@ -119,24 +119,44 @@
     @include flex-column;
     gap: $spacing-2;
     flex: 1;
-    width: 100%;
+    min-width: 0;
   }
 
   &__upload-actions {
     display: flex;
-    flex-direction: column;
-    align-items: flex-start;
-    gap: $spacing-1;
-    width: 100%;
+    align-items: center;
+    gap: $spacing-3;
+    flex-wrap: wrap;
   }
 
   &__upload-btn {
     white-space: nowrap;
-    width: 100%;
-    max-width: 260px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: row;
+    gap: $spacing-2;
+    height: 36px;
+    padding: 0 $spacing-4;
+    font-size: $font-size-xs;
+    font-weight: $font-weight-medium;
     background-color: $color-black;
     color: $color-white;
-    justify-content: center;
+    border-radius: $border-radius-md;
+    width: auto;
+
+    svg,
+    .btn__icon {
+      display: inline-block;
+      flex-shrink: 0;
+      margin: 0;
+    }
+
+    .btn__text {
+      display: inline-flex;
+      align-items: center;
+      white-space: nowrap;
+    }
 
     &:hover:not(:disabled) {
       background-color: $color-grey-800;
@@ -145,7 +165,8 @@
 
   &__upload-hint {
     font-size: $font-size-xs;
-    color: $color-grey-400;
+    color: $color-grey-500;
+    white-space: nowrap;
   }
 
   &__user-email {
