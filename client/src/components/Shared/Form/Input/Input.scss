@@ -18,13 +18,59 @@
     margin-left: 2px;
   }
 
+  &__input-wrapper {
+    position: relative;
+    width: 100%;
+    display: flex;
+    align-items: center;
+  }
+
   &__input {
     @include input-base;
+
+    &--with-toggle {
+      padding-right: $spacing-9;
+    }
+  }
+
+  &__password-toggle {
+    position: absolute;
+    right: $spacing-3;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: transparent;
+    border: none;
+    color: $color-grey-500;
+    cursor: pointer;
+    padding: $spacing-1;
+    border-radius: $border-radius-sm;
+    transition: color $transition-fast;
+
+    &:hover:not(:disabled) {
+      color: $color-black;
+    }
+
+    &:focus-visible {
+      outline: 2px solid $color-black;
+      outline-offset: 1px;
+    }
+
+    &:disabled {
+      cursor: not-allowed;
+      opacity: 0.5;
+    }
   }
 
   &__error {
     font-size: $font-size-xs;
     color: $color-error;
+    margin-top: 2px;
+  }
+
+  &__helper {
+    font-size: $font-size-xs;
+    color: $color-grey-500;
     margin-top: 2px;
   }
 
