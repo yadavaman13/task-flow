@@ -12,6 +12,7 @@ export default function InvitationsPage() {
     pendingInvitations,
     loadPendingInvitations,
     handleAcceptInvitation,
+    handleDeclineInvitation,
     loading,
     isSubmitting,
   } = useInvitation();
@@ -21,11 +22,15 @@ export default function InvitationsPage() {
     loadPendingInvitations();
   }, [loadPendingInvitations]);
 
-  const onAccept = async (token) => {
-    const res = await handleAcceptInvitation(token);
+  const onAccept = async (invitation) => {
+    const res = await handleAcceptInvitation(invitation);
     if (res.success) {
       navigate('/workspaces');
     }
+  };
+
+  const onDecline = async (invitation) => {
+    await handleDeclineInvitation(invitation);
   };
 
   return (
@@ -54,6 +59,7 @@ export default function InvitationsPage() {
               key={inv.id || inv._id || inv.token}
               invitation={inv}
               onAccept={onAccept}
+              onDecline={onDecline}
               isSubmitting={isSubmitting}
             />
           ))}

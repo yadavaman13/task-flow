@@ -1,4 +1,4 @@
-import { createContext, useContext, useState } from 'react';
+import { createContext, useContext, useState, useCallback } from 'react';
 
 export const WorkspaceContext = createContext(null);
 
@@ -8,6 +8,14 @@ export function WorkspaceProvider({ children }) {
   const [members, setMembers] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
+
+  const resetWorkspaceState = useCallback(() => {
+    setWorkspaces([]);
+    setSelectedWorkspace(null);
+    setMembers([]);
+    setLoading(false);
+    setError(null);
+  }, []);
 
   const value = {
     workspaces,
@@ -20,6 +28,7 @@ export function WorkspaceProvider({ children }) {
     setLoading,
     error,
     setError,
+    resetWorkspaceState,
   };
 
   return <WorkspaceContext.Provider value={value}>{children}</WorkspaceContext.Provider>;

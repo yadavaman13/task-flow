@@ -32,6 +32,12 @@ export function useWorkspace() {
       const res = await fetchWorkspaces();
       const list = res.data || [];
       setWorkspaces(list);
+      // Validate selectedWorkspace against the newly loaded workspaces
+      setSelectedWorkspace((prev) => {
+        if (!prev) return null;
+        const exists = list.some((w) => (w.id || w._id) === (prev.id || prev._id));
+        return exists ? prev : null;
+      });
       return { success: true, data: list };
     } catch (err) {
       const msg = err.response?.data?.message || 'Failed to load workspaces';
@@ -41,7 +47,7 @@ export function useWorkspace() {
     } finally {
       setLoading(false);
     }
-  }, [setLoading, setWorkspaces, setError]);
+  }, [setLoading, setWorkspaces, setSelectedWorkspace, setError]);
 
   const loadWorkspace = useCallback(
     async (id) => {
@@ -54,6 +60,7 @@ export function useWorkspace() {
       } catch (err) {
         const msg = err.response?.data?.message || 'Failed to load workspace details';
         setError(msg);
+        setSelectedWorkspace(null);
         toast.error(msg);
         return { success: false, error: msg };
       } finally {

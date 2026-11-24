@@ -1,4 +1,4 @@
-import { useEffect, useState, useCallback } from 'react';
+import { useEffect, useState, useCallback, useMemo } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { Building2, Users, Settings, UserPlus, ArrowLeft, LayoutDashboard, Shield, Plus, FolderKanban } from 'lucide-react';
 import Button from '@/components/Shared/Buttons/Button/Button';
@@ -12,6 +12,7 @@ import TeamCard from '@/app/features/team/components/TeamCard/TeamCard';
 import CreateTeamModal from '@/app/features/team/components/CreateTeamModal/CreateTeamModal';
 import { useWorkspace } from '../../hooks/useWorkspace';
 import { useTeam } from '@/app/features/team/hooks/useTeam';
+import { useInvitation } from '@/app/features/invitation/hooks/useInvitation';
 import { useAuthContext } from '@/app/features/auth/context/auth.context';
 import './WorkspaceDetailPage.scss';
 
@@ -31,6 +32,11 @@ export default function WorkspaceDetailPage() {
     isSubmitting,
   } = useWorkspace();
   const { teams, loadWorkspaceTeams } = useTeam();
+  const {
+    workspaceInvitations,
+    loadWorkspaceInvitations,
+    handleCancelInvitation,
+  } = useInvitation();
 
   const [activeTab, setActiveTab] = useState('teams'); // 'teams' | 'members' | 'settings'
   const [editForm, setEditForm] = useState({ name: '', description: '' });
@@ -42,8 +48,9 @@ export default function WorkspaceDetailPage() {
       loadWorkspace(workspaceId);
       loadMembers(workspaceId);
       loadWorkspaceTeams(workspaceId);
+      loadWorkspaceInvitations(workspaceId);
     }
-  }, [workspaceId, loadWorkspace, loadMembers, loadWorkspaceTeams]);
+  }, [workspaceId, loadWorkspace, loadMembers, loadWorkspaceTeams, loadWorkspaceInvitations]);
 
   useEffect(() => {
     loadData();
@@ -64,6 +71,15 @@ export default function WorkspaceDetailPage() {
     await handleUpdateWorkspace(workspaceId, editForm);
   };
 
+  const userRole = (selectedWorkspace?.role || 'MEMBER').toUpperCase();
+  const isOwnerOrAdmin = userRole === 'OWNER' || userRole === 'ADMIN';
+
+  const pendingInvitations = useMemo(() => {
+    return (workspaceInvitations || []).filter(
+      (inv) => inv.status === 'PENDING' || !inv.status
+    );
+  }, [workspaceInvitations]);
+
   if (loading && !selectedWorkspace) {
     return (
       <div className="workspace-detail-page__loading">
@@ -82,8 +98,6 @@ export default function WorkspaceDetailPage() {
       </div>
     );
   }
-
-  const userRole = selectedWorkspace.role || 'MEMBER';
 
   return (
     <div className="workspace-detail-page">
@@ -117,6 +131,15 @@ export default function WorkspaceDetailPage() {
         </div>
 
         <div className="workspace-detail-header__actions">
+          {isOwnerOrAdmin && (
+            <Button
+              variant="primary"
+              icon={UserPlus}
+              onClick={() => setIsInviteModalOpen(true)}
+            >
+              Invite Member
+            </Button>
+          )}
           <Button
             variant="secondary"
             icon={LayoutDashboard}
@@ -208,30 +231,76 @@ export default function WorkspaceDetailPage() {
           <div className="workspace-members-tab">
             <div className="workspace-members-tab__header">
               <h3>Workspace Members</h3>
-              <Button
-                variant="primary"
-                size="sm"
-                icon={UserPlus}
-                onClick={() => setIsInviteModalOpen(true)}
-              >
-                Invite Member
-              </Button>
+              {isOwnerOrAdmin && (
+                <Button
+                  variant="primary"
+                  size="sm"
+                  icon={UserPlus}
+                  onClick={() => setIsInviteModalOpen(true)}
+                >
+                  Invite Member
+                </Button>
+              )}
             </div>
 
             <MemberList
               members={members}
               currentRole={userRole}
-              currentUserId={user?.id}
+              currentUserId={user?.id || user?._id}
               onUpdateRole={(userId, role) => handleUpdateMemberRole(workspaceId, userId, role)}
               onRemoveMember={(userId) => handleRemoveMember(workspaceId, userId)}
             />
 
-            <InviteModal
-              isOpen={isInviteModalOpen}
-              onClose={() => setIsInviteModalOpen(false)}
-              workspaceId={workspaceId}
-              onSent={() => loadMembers(workspaceId)}
-            />
+            {isOwnerOrAdmin && pendingInvitations.length > 0 && (
+              <div className="workspace-invitations-section">
+                <h4 className="workspace-invitations-title">
+                  Pending Invitations ({pendingInvitations.length})
+                </h4>
+                <div className="workspace-invitations-wrapper">
+                  <table className="workspace-invitations-table">
+                    <thead>
+                      <tr>
+                        <th>Email</th>
+                        <th>Role</th>
+                        <th>Status</th>
+                        <th>Action</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {pendingInvitations.map((inv) => {
+                        const invId = inv.id || inv._id;
+                        return (
+                          <tr key={invId}>
+                            <td className="workspace-invitations-email">{inv.email}</td>
+                            <td>
+                              <span className={`member-role-badge member-role-badge--${inv.role?.toLowerCase()}`}>
+                                <Shield size={12} />
+                                <span>{inv.role}</span>
+                              </span>
+                            </td>
+                            <td>
+                              <span className="workspace-invitations-status">
+                                {inv.status || 'PENDING'}
+                              </span>
+                            </td>
+                            <td>
+                              <Button
+                                variant="ghost"
+                                size="sm"
+                                onClick={() => handleCancelInvitation(workspaceId, invId)}
+                                title="Cancel invitation"
+                              >
+                                Cancel
+                              </Button>
+                            </td>
+                          </tr>
+                        );
+                      })}
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            )}
           </div>
         )}
 
@@ -264,6 +333,16 @@ export default function WorkspaceDetailPage() {
           </div>
         )}
       </div>
+
+      <InviteModal
+        isOpen={isInviteModalOpen}
+        onClose={() => setIsInviteModalOpen(false)}
+        workspaceId={workspaceId}
+        onSent={() => {
+          loadMembers(workspaceId);
+          loadWorkspaceInvitations(workspaceId);
+        }}
+      />
     </div>
   );
 }

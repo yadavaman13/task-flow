@@ -126,15 +126,20 @@ export async function getMyPending(req, res) {
 
 export async function accept(req, res) {
   try {
-    const { token } = req.body;
+    const { token, invitationId, id } = req.body;
     const rawToken = typeof token === 'string' ? token.trim() : '';
+    const inviteId = invitationId || id;
 
-    if (!rawToken) {
-      return res.status(400).json({ message: 'Invitation token is required.' });
+    let inv = null;
+    if (rawToken) {
+      const tokenHash = hashToken(rawToken);
+      inv = await invitationQ.findByTokenHash(tokenHash);
+    } else if (inviteId) {
+      inv = await invitationQ.findById(inviteId);
+    } else {
+      return res.status(400).json({ message: 'Invitation token or ID is required.' });
     }
 
-    const tokenHash = hashToken(rawToken);
-    const inv = await invitationQ.findByTokenHash(tokenHash);
     if (!inv) {
       return res.status(404).json({ message: 'Invitation not found.' });
     }
@@ -202,15 +207,20 @@ export async function accept(req, res) {
 
 export async function decline(req, res) {
   try {
-    const { token } = req.body;
+    const { token, invitationId, id } = req.body;
     const rawToken = typeof token === 'string' ? token.trim() : '';
+    const inviteId = invitationId || id;
 
-    if (!rawToken) {
-      return res.status(400).json({ message: 'Invitation token is required.' });
+    let inv = null;
+    if (rawToken) {
+      const tokenHash = hashToken(rawToken);
+      inv = await invitationQ.findByTokenHash(tokenHash);
+    } else if (inviteId) {
+      inv = await invitationQ.findById(inviteId);
+    } else {
+      return res.status(400).json({ message: 'Invitation token or ID is required.' });
     }
 
-    const tokenHash = hashToken(rawToken);
-    const inv = await invitationQ.findByTokenHash(tokenHash);
     if (!inv) {
       return res.status(404).json({ message: 'Invitation not found.' });
     }

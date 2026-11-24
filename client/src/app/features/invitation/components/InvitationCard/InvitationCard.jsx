@@ -1,4 +1,4 @@
-import { Building2, Check, Shield, Clock } from 'lucide-react';
+import { Building2, Check, Shield, Clock, X } from 'lucide-react';
 import { formatDate } from '@/utils/formatters';
 import Button from '@/components/Shared/Buttons/Button/Button';
 import './InvitationCard.scss';
@@ -6,11 +6,17 @@ import './InvitationCard.scss';
 export default function InvitationCard({
   invitation,
   onAccept,
+  onDecline,
   isSubmitting = false,
 }) {
   const workspaceName = invitation.workspace_name || invitation.workspace?.name || 'Workspace';
   const role = invitation.role || 'MEMBER';
-  const inviter = invitation.inviter_name || invitation.inviter?.name || 'A team member';
+  const inviter =
+    invitation.invited_by_name ||
+    invitation.inviter_name ||
+    invitation.inviter?.name ||
+    'A team member';
+  const expiryDate = invitation.expires_at || invitation.expiresAt;
 
   return (
     <div className="invitation-card">
@@ -31,21 +37,33 @@ export default function InvitationCard({
           Invited by <strong>{inviter}</strong>
         </p>
 
-        {invitation.expiresAt && (
+        {expiryDate && (
           <div className="invitation-card__expiry">
             <Clock size={12} />
-            <span>Expires {formatDate(invitation.expiresAt)}</span>
+            <span>Expires {formatDate(expiryDate)}</span>
           </div>
         )}
       </div>
 
       <div className="invitation-card__actions">
+        {onDecline && (
+          <Button
+            variant="ghost"
+            size="sm"
+            icon={X}
+            disabled={isSubmitting}
+            onClick={() => onDecline(invitation)}
+          >
+            Decline
+          </Button>
+        )}
         <Button
           variant="primary"
           size="sm"
           icon={Check}
           loading={isSubmitting}
-          onClick={() => onAccept(invitation.token)}
+          disabled={isSubmitting}
+          onClick={() => onAccept(invitation)}
         >
           Accept Invitation
         </Button>

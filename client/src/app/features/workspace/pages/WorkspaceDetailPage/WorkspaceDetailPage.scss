@@ -157,6 +157,68 @@
   }
 }
 
+.workspace-invitations-section {
+  @include flex-column;
+  gap: $spacing-3;
+  margin-top: $spacing-4;
+  padding-top: $spacing-4;
+  border-top: 1px solid $border-color;
+}
+
+.workspace-invitations-title {
+  font-size: $font-size-sm;
+  font-weight: $font-weight-semibold;
+  color: $color-grey-700;
+}
+
+.workspace-invitations-wrapper {
+  @include card;
+  padding: 0;
+  overflow: hidden;
+}
+
+.workspace-invitations-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: $font-size-sm;
+
+  th,
+  td {
+    padding: $spacing-3 $spacing-4;
+    text-align: left;
+    border-bottom: 1px solid $color-grey-100;
+  }
+
+  th {
+    background-color: $color-grey-50;
+    font-size: $font-size-xs;
+    font-weight: $font-weight-medium;
+    color: $color-grey-500;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+
+  tr:last-child td {
+    border-bottom: none;
+  }
+}
+
+.workspace-invitations-email {
+  font-weight: $font-weight-medium;
+  color: $color-black;
+}
+
+.workspace-invitations-status {
+  display: inline-flex;
+  align-items: center;
+  font-size: $font-size-xs;
+  font-weight: $font-weight-medium;
+  color: #b45309;
+  background-color: #fef3c7;
+  padding: 2px $spacing-2;
+  border-radius: $border-radius-full;
+}
+
 .workspace-settings-tab {
   max-width: 600px;
 }

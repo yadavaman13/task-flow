@@ -1,9 +1,10 @@
-import { Building2, Shield, Users } from 'lucide-react';
+import { Building2, Shield, Users, UserPlus } from 'lucide-react';
 import './WorkspaceCard.scss';
 
-export default function WorkspaceCard({ workspace, onClick }) {
-  const role = workspace.role || 'MEMBER';
+export default function WorkspaceCard({ workspace, onClick, onInvite }) {
+  const role = (workspace.role || 'MEMBER').toUpperCase();
   const memberCount = workspace.member_count ?? workspace.members_count;
+  const isOwnerOrAdmin = role === 'OWNER' || role === 'ADMIN';
 
   return (
     <div className="workspace-card" onClick={onClick}>
@@ -25,11 +26,27 @@ export default function WorkspaceCard({ workspace, onClick }) {
       </div>
 
       <div className="workspace-card__footer">
-        {memberCount !== undefined && (
+        {memberCount !== undefined ? (
           <span className="workspace-card__members">
             <Users size={14} />
             <span>{memberCount} {memberCount === 1 ? 'member' : 'members'}</span>
           </span>
+        ) : (
+          <span />
+        )}
+        {isOwnerOrAdmin && onInvite && (
+          <button
+            type="button"
+            className="workspace-card__invite-btn"
+            onClick={(e) => {
+              e.stopPropagation();
+              onInvite(workspace);
+            }}
+            title="Invite members to this workspace"
+          >
+            <UserPlus size={14} />
+            <span>Invite</span>
+          </button>
         )}
       </div>
     </div>

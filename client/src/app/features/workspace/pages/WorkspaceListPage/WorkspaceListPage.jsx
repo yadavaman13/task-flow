@@ -6,12 +6,14 @@ import Spinner from '@/components/Shared/Feedback/Spinner/Spinner';
 import EmptyState from '@/components/Shared/Feedback/EmptyState/EmptyState';
 import WorkspaceCard from '../../components/WorkspaceCard/WorkspaceCard';
 import CreateWorkspaceModal from '../../components/CreateWorkspaceModal/CreateWorkspaceModal';
+import InviteModal from '@/app/features/invitation/components/InviteModal/InviteModal';
 import { useWorkspace } from '../../hooks/useWorkspace';
 import './WorkspaceListPage.scss';
 
 export default function WorkspaceListPage() {
   const { workspaces, loadWorkspaces, loading } = useWorkspace();
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [inviteWorkspace, setInviteWorkspace] = useState(null);
   const [searchTerm, setSearchTerm] = useState('');
   const navigate = useNavigate();
 
@@ -90,6 +92,7 @@ export default function WorkspaceListPage() {
               key={ws.id || ws._id}
               workspace={ws}
               onClick={() => navigate(`/workspaces/${ws.id || ws._id}`)}
+              onInvite={(wsToInvite) => setInviteWorkspace(wsToInvite)}
             />
           ))}
         </div>
@@ -102,6 +105,15 @@ export default function WorkspaceListPage() {
           navigate(`/workspaces/${newWs.id || newWs._id}`);
         }}
       />
+
+      {inviteWorkspace && (
+        <InviteModal
+          isOpen={Boolean(inviteWorkspace)}
+          onClose={() => setInviteWorkspace(null)}
+          workspaceId={inviteWorkspace.id || inviteWorkspace._id}
+          onSent={() => loadWorkspaces()}
+        />
+      )}
     </div>
   );
 }

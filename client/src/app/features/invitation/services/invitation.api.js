@@ -15,8 +15,21 @@ export const fetchPendingInvitations = async () => {
   return response.data;
 };
 
-export const acceptInvitation = async (token) => {
-  const response = await api.post('/invitations/accept', { token });
+export const acceptInvitation = async (payload) => {
+  const body =
+    typeof payload === 'object' && payload !== null
+      ? payload
+      : { token: payload, invitationId: payload, id: payload };
+  const response = await api.post('/invitations/accept', body);
+  return response.data;
+};
+
+export const declineInvitation = async (payload) => {
+  const body =
+    typeof payload === 'object' && payload !== null
+      ? payload
+      : { token: payload, invitationId: payload, id: payload };
+  const response = await api.post('/invitations/decline', body);
   return response.data;
 };
 

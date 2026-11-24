@@ -8,6 +8,7 @@ import Spinner from '@/components/Shared/Feedback/Spinner/Spinner';
 import Button from '@/components/Shared/Buttons/Button/Button';
 import { useDashboard } from '../../hooks/useDashboard';
 import { useActivity } from '@/app/features/activity/hooks/useActivity';
+import { useWorkspace } from '@/app/features/workspace/hooks/useWorkspace';
 import './DashboardPage.scss';
 
 export default function DashboardPage() {
@@ -15,13 +16,15 @@ export default function DashboardPage() {
   const navigate = useNavigate();
   const { workspaceStats, loading, loadWorkspaceStats } = useDashboard();
   const { activities, loadWorkspaceActivity, loading: activityLoading } = useActivity();
+  const { loadWorkspace } = useWorkspace();
 
   const loadData = useCallback(() => {
     if (workspaceId) {
+      loadWorkspace(workspaceId);
       loadWorkspaceStats(workspaceId);
       loadWorkspaceActivity(workspaceId);
     }
-  }, [workspaceId, loadWorkspaceStats, loadWorkspaceActivity]);
+  }, [workspaceId, loadWorkspace, loadWorkspaceStats, loadWorkspaceActivity]);
 
   useEffect(() => {
     loadData();

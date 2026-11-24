@@ -6,6 +6,7 @@ import {
   fetchWorkspaceInvitations,
   fetchPendingInvitations,
   acceptInvitation,
+  declineInvitation,
   cancelInvitation,
 } from '../services/invitation.api';
 
@@ -72,15 +73,65 @@ export function useInvitation() {
     }
   };
 
-  const handleAcceptInvitation = async (token) => {
+  const handleAcceptInvitation = async (invitationOrToken) => {
     setIsSubmitting(true);
     try {
-      const res = await acceptInvitation(token);
-      setPendingInvitations((prev) => prev.filter((inv) => inv.token !== token));
+      const isObj = typeof invitationOrToken === 'object' && invitationOrToken !== null;
+      const payload = isObj
+        ? {
+            token: invitationOrToken.token,
+            invitationId: invitationOrToken.id || invitationOrToken._id,
+            id: invitationOrToken.id || invitationOrToken._id,
+          }
+        : {
+            token: invitationOrToken,
+            invitationId: invitationOrToken,
+            id: invitationOrToken,
+          };
+
+      const res = await acceptInvitation(payload);
+      const targetId = isObj ? (invitationOrToken.id || invitationOrToken._id) : invitationOrToken;
+
+      setPendingInvitations((prev) =>
+        prev.filter((inv) => (inv.id || inv._id) !== targetId && inv.token !== targetId)
+      );
       toast.success(res.message || 'Invitation accepted! Welcome to the workspace.');
       return { success: true, data: res.data };
     } catch (err) {
       const msg = err.response?.data?.message || 'Failed to accept invitation';
+      toast.error(msg);
+      return { success: false, error: msg };
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
+  const handleDeclineInvitation = async (invitationOrToken) => {
+    setIsSubmitting(true);
+    try {
+      const isObj = typeof invitationOrToken === 'object' && invitationOrToken !== null;
+      const payload = isObj
+        ? {
+            token: invitationOrToken.token,
+            invitationId: invitationOrToken.id || invitationOrToken._id,
+            id: invitationOrToken.id || invitationOrToken._id,
+          }
+        : {
+            token: invitationOrToken,
+            invitationId: invitationOrToken,
+            id: invitationOrToken,
+          };
+
+      const res = await declineInvitation(payload);
+      const targetId = isObj ? (invitationOrToken.id || invitationOrToken._id) : invitationOrToken;
+
+      setPendingInvitations((prev) =>
+        prev.filter((inv) => (inv.id || inv._id) !== targetId && inv.token !== targetId)
+      );
+      toast.success(res.message || 'Invitation declined');
+      return { success: true, data: res.data };
+    } catch (err) {
+      const msg = err.response?.data?.message || 'Failed to decline invitation';
       toast.error(msg);
       return { success: false, error: msg };
     } finally {
@@ -112,6 +163,7 @@ export function useInvitation() {
     loadWorkspaceInvitations,
     handleSendInvitation,
     handleAcceptInvitation,
+    handleDeclineInvitation,
     handleCancelInvitation,
   };
 }

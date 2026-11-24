@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import toast from 'react-hot-toast';
+import { storage } from '@/utils/storage';
 import { useAuthContext } from '../context/auth.context';
 import {
   loginUser,
@@ -66,6 +67,7 @@ export function useAuth() {
     } finally {
       setToken(null);
       setUser(null);
+      storage.clear();
       toast.success('Logged out successfully');
     }
   };

@@ -1,6 +1,6 @@
 import { RouterProvider } from 'react-router-dom';
 import ErrorBoundary from '@/components/Shared/Feedback/ErrorBoundary/ErrorBoundary';
-import { AuthProvider } from './features/auth/context/auth.context';
+import { AuthProvider, useAuthContext } from './features/auth/context/auth.context';
 import { WorkspaceProvider } from './features/workspace/context/workspace.context';
 import { InvitationProvider } from './features/invitation/context/invitation.context';
 import { TeamProvider } from './features/team/context/team.context';
@@ -12,29 +12,40 @@ import { ActivityProvider } from './features/activity/context/activity.context';
 import { DashboardProvider } from './features/dashboard/context/dashboard.context';
 import { router } from './App.routes';
 
+function UserScopedProviders({ children }) {
+  const { user } = useAuthContext();
+  const userId = user?.id || user?._id || 'guest';
+
+  return (
+    <WorkspaceProvider key={`workspace-${userId}`}>
+      <InvitationProvider key={`invitation-${userId}`}>
+        <TeamProvider key={`team-${userId}`}>
+          <ProjectProvider key={`project-${userId}`}>
+            <TaskProvider key={`task-${userId}`}>
+              <CommentProvider key={`comment-${userId}`}>
+                <NotificationProvider key={`notification-${userId}`}>
+                  <ActivityProvider key={`activity-${userId}`}>
+                    <DashboardProvider key={`dashboard-${userId}`}>
+                      {children}
+                    </DashboardProvider>
+                  </ActivityProvider>
+                </NotificationProvider>
+              </CommentProvider>
+            </TaskProvider>
+          </ProjectProvider>
+        </TeamProvider>
+      </InvitationProvider>
+    </WorkspaceProvider>
+  );
+}
+
 export default function App() {
   return (
     <ErrorBoundary>
       <AuthProvider>
-        <WorkspaceProvider>
-          <InvitationProvider>
-            <TeamProvider>
-              <ProjectProvider>
-                <TaskProvider>
-                  <CommentProvider>
-                    <NotificationProvider>
-                      <ActivityProvider>
-                        <DashboardProvider>
-                          <RouterProvider router={router} />
-                        </DashboardProvider>
-                      </ActivityProvider>
-                    </NotificationProvider>
-                  </CommentProvider>
-                </TaskProvider>
-              </ProjectProvider>
-            </TeamProvider>
-          </InvitationProvider>
-        </WorkspaceProvider>
+        <UserScopedProviders>
+          <RouterProvider router={router} />
+        </UserScopedProviders>
       </AuthProvider>
     </ErrorBoundary>
   );

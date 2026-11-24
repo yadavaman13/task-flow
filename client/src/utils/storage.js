@@ -20,5 +20,15 @@ export const storage = {
   clear: () => {
     localStorage.removeItem(TOKEN_KEY);
     localStorage.removeItem(USER_KEY);
+    // Clear any other taskflow items
+    try {
+      Object.keys(localStorage).forEach((key) => {
+        if (key.startsWith('taskflow_')) {
+          localStorage.removeItem(key);
+        }
+      });
+    } catch {
+      // Ignore localStorage access issues
+    }
   },
 };
